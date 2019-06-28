@@ -109,7 +109,7 @@ exclude 指令可以忽略依赖项模块
 ```
     export GOPROXY="https://goproxy.io"
 ```
-- 使用go mod replace 替换下载不了的包，列入golang.org 下面的包
+- 使用go mod replace 替换下载不了的包，例如golang.org下面的包
 
 ```
     replace (
@@ -133,6 +133,7 @@ golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
 latest
 ```
 
-#   参考资料
 
-- [go modules官方文档](https://github.com/golang/go/wiki/Modules#quick-start)
+# 总结
+
+本小节介绍golang modules的使用，go modules本身有很多比较复杂的设计，你可以通过go modules[官方英文文档](https://github.com/golang/go/wiki/Modules#quick-start)做详细了解。go modules对golang 项目构建的基石，在实际项目中一定会经常接触到。 
