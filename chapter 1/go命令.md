@@ -57,7 +57,7 @@ go build 有好多的个参数，其中比较常用的是
 
 ## go get
 
-go get 在go modules出现之前一直作为go获取依赖包的工具，在go modules出现后，go get的功能和之前有了不一样的定位。go get获取解析并将依赖项添加到当前开发模块然后构建并安装它们。
+go get 在go modules出现之前一直作为go获取依赖包的工具，在go modules出现后，go get的功能和之前有了不一样的定位。现在go get主要的功能是获取解析并将依赖项添加到当前开发模块然后构建并安装它们。
 
 参考 go modules 章节
 
