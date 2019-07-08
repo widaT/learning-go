@@ -123,7 +123,7 @@ exclude 指令可以忽略依赖项模块
 
 ### 模块版本定义规则
 
-模块必须根据[semver](https://semver.org/)进行语义版本化，通常采用v（major）.（minor）.（patch）的形式，例如v0.1.0，v1.2.3或v1.5.0-rc.1。版本必需是v字母开头。 go mod 在来气对应包版本的时候会拉取相应包的git tag，如果对应包没有git tag 就会来取master 而对应的版本好会变成v0.0.0。go mod工具中的版本号格式为版本号 + 时间戳 + hash以下的版本都是合法的：
+模块必须根据[semver](https://semver.org/)进行语义版本化，通常采用v（major）.（minor）.（patch）的形式，例如v0.1.0，v1.2.3或v1.5.0-rc.1。版本必需是v字母开头。 go mod 在拉取对应包版本的时候会找相应包的git tag（release tag和 pre release tag），如果对应包没有git tag 就会来取master 而对应的版本好会变成v0.0.0。go mod工具中的版本号格式为版本号 + 时间戳 + hash以下的版本都是合法的：
 
 ```
 gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
