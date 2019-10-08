@@ -5,3 +5,4 @@
     - 实战 《Go语言实战》
     - 进阶 《Go并发编程实战》
 - [《Go语言高级编程》](https://chai2010.gitbooks.io/advanced-go-programming-book/content)
+- [GO专家编程](https://rainbowmango.gitbook.io/go/)
