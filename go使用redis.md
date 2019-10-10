@@ -1,6 +1,6 @@
 # go使用redis
 
-go语言比较常用的两个redis包[redis](https://github.com/go-redis/redis)和[goredis](https://github.com/gomodule/redigo)。前者封装的比较优雅，功能也比较全。后者像是个工具集合，redis command需要重新封装下才好用在项目中，流行度也很广。本文主要介绍前者[redis](https://github.com/go-redis/redis)的使用。
+go语言比较常用的两个redis包[redis](https://github.com/go-redis/redis)和[redigo](https://github.com/gomodule/redigo)。前者封装的比较优雅，功能也比较全。后者像是个工具集合，redis command需要重新封装下才好用在项目中，流行度也很广。本文主要介绍前者[redis](https://github.com/go-redis/redis)的使用。
 
 ## redis连接池
 创建redis client的代码如下，
