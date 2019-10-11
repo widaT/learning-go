@@ -47,7 +47,7 @@ fmt.Println(ret,err)
 
 ## CURD操作
 
-###　添加
+### 添加
 ```golang
 func add()  {
 	wida := Student{"wida", 32, "8001"}
