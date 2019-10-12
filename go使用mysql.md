@@ -1,7 +1,7 @@
 # go使用mysql
 
 go的mysql驱动相对比较统一，基本都用[go-sql-driver](github.com/go-sql-driver/mysql)。这个驱动也实现了数据库连接池。但是没有实现orm。
-目前go的mysqlorm实现则比较多 [gorm](https://github.com/jinzhu/gorm)、[xorm](https://github.com/go-xorm/xorm)、[beego-orm](https://github.com/astaxie/beego/tree/master/orm)。orm使用起来比较灵活，但是在大型项目中，由于orm屏蔽底层细节的原因通常不建议使用。本文主要介绍`go-sql-driver`不介绍rom。
+目前go的mysql orm实现则比较多 [gorm](https://github.com/jinzhu/gorm)、[xorm](https://github.com/go-xorm/xorm)、[beego-orm](https://github.com/astaxie/beego/tree/master/orm)。orm使用起来比较灵活，但是在大型项目中，由于orm屏蔽底层细节的原因通常不建议使用。本文主要介绍`go-sql-driver`不介绍rom。
 
 
 
@@ -164,5 +164,5 @@ func transaction()  {
 }
 ```
 
-#　参考资料
+# 参考资料
 - [go-sql-driver](https://github.com/go-sql-driver/mysql)
