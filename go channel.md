@@ -175,5 +175,4 @@ func isClosed(c *chan int) uint32 {
 
 # 参考文档
 [深度解密Go语言之channel](https://www.cnblogs.com/qcrao-2018/p/11220651.html#%E6%8E%A5%E6%94%B6)
-
 [understanding channels](https://speakerd.s3.amazonaws.com/presentations/10ac0b1d76a6463aa98ad6a9dec917a7/GopherCon_v10.0.pdf)

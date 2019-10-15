@@ -1,5 +1,5 @@
 # go 语言结构图优雅初始化的一种方式
-改方式存在 go-micro，go-grpc中
+该方式存于go-micro，go-grpc中
 
 ```go
 package  main
