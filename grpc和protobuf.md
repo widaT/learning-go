@@ -1,7 +1,7 @@
 # grpc和protobuf
 
 ## 什么是rpc
-RPC（Remote Procedure Call），翻译成中文叫远程过程调用。其设计思路是程序A可以像支持本地函数一样调用远程程序B的一个函数。程序A和程序B很可能不在一台机器上，这中间就需要网络通讯，一般都是基于tcp或者http协议。函数有入参和返回值这里就需要约定一直序列化方式，比较常见的有binary，json，xml。函数的调用过程可以同步和异步。随着分布式程序近几年的大行其道，rpc作为其主要的通讯方式也越来越进入我们的视野，比如GRPC，Thrift。
+RPC（Remote Procedure Call），翻译成中文叫远程过程调用。其设计思路是程序A可以像支持本地函数一样调用远程程序B的一个函数。程序A和程序B很可能不在一台机器上，这中间就需要网络通讯，一般都是基于tcp或者http协议。函数有入参和返回值这里就需要约定一致的序列化方式，比较常见的有binary，json，xml。函数的调用过程可以同步和异步。随着分布式程序近几年的大行其道，rpc作为其主要的通讯方式也越来越进入我们的视野，比如grpc，thrift。
 
 ## go标准库的rpc
 golang的标准库就支持rpc。
@@ -93,7 +93,7 @@ $ go run client/main.go
 1190
 2
 ```
-程序中我们没有看到参数的序列化和反序列化过程，实际上rpc使用`encoding/gob`做了序列化和反序列化操作，但是`encoding/gob`只支持go语言内部做交互，如果需要夸语言的话就不能用`encoding/gob`了。我们还可以使用标准库中的jsonrpc.
+程序中我们没有看到参数的序列化和反序列化过程，实际上go标准库rpc使用`encoding/gob`做了序列化和反序列化操作，但是`encoding/gob`只支持go语言内部做交互，如果需要夸语言的话就不能用`encoding/gob`了。我们还可以使用标准库中的jsonrpc.
 
 server
 ```golang
@@ -148,18 +148,18 @@ $ echo -e '{"method":"test.Multiply","params":[{"A":34,"B":35}],"id":0}' | nc lo
 $ echo -e '{"method":"test.Divide","params":[{"A":34,"B":17}],"id":1}' | nc localhost 9700
 {"id":0,"result":1190,"error":null}
 ```
-这个例子中我们用go写了服务端，客户端我们使用nc直接和服务端交互。可以看到交互的序列化方式是json，因此其它语言也很容易实现和该服务端的交互。
+这个例子中我们用go写了服务端，客户端我们使用linux 命令行工具nc（natcat可能需要单独安装）直接和服务端交互。可以看到交互的序列化方式是json，因此其它语言也很容易实现和该服务端的交互。
 
-当然我们上面演示的是基于tcp的rpc方式，标准库同时也支持http协议的rpc，感兴趣的同学可以去了解下。
+当然我们上面演示的是基于tcp的rpc方式，标准库同时也支持http协议的rpc，感兴趣的同学可以去了解下，这边就不做展开介绍。
 
 ## GRPC
-上面我们发了一些篇幅介绍了标准库的rpc，主要的目的是想介绍rpc是什么东西。实际的开发中我们反而比较少用标准库的rpc，我们通常会选择grpc，grpc不仅仅在go生态里头非常流行，在其他语言生态里头同样也非常流行。
+上面我们发了一些篇幅介绍了标准库的rpc，主要的目的是了解rpc是什么。实际的开发中我们反而比较少用标准库的rpc，我们通常会选择grpc，grpc不仅仅在go生态里头非常流行，在其他语言生态里头同样也非常流行。
 
 grpc是google公司开发的基于http2协议设计和protobuf开发的，高性能，跨语言的rpc框架。这边着重介绍下http2的一个重要特性当tcp多路复用功能，说得直白点就是一个在tcp链接执行多个请求，所以Service A提供N多个服务，Client B和A的所有交互都只用一个链接，这样子可以省很多的链接资源。对tcp连接复用（ connection multiplexing）感兴趣的同学可以阅读下[yamux](https://github.com/hashicorp/yamux)的源码。
 
 ### protobuf
 
-protobuf 是google开发的一种平台中立，语言中立，可拓展的数据描述语言。类似json，xml等数据描述语言类似，proto也实现了自己的序列化和反序列化方式，对相对于json来说，protobuf序列化效率更高，体积更小。官方地址[protobuf](https://github.com/protocolbuffers/protobuf)有兴趣的同学可以看看。
+protobuf是google开发的一种平台中立，语言中立，可拓展的数据描述语言。类似json，xml等数据描述语言类似，proto也实现了自己的序列化和反序列化方式，对相对于json来说，protobuf序列化效率更高，体积更小。官方地址[protobuf](https://github.com/protocolbuffers/protobuf)有兴趣的同学可以看看。
 
 #### protobuf安装
 
@@ -168,7 +168,7 @@ protobuf 是google开发的一种平台中立，语言中立，可拓展的数�
 protoc-3.10.0-win32.zip
 protoc-3.10.0-linux-x86_64.zip
 ```
-加压文件到文件夹，然后将改文件目录添加到环境变量`PATH`中。
+解压文件到文件夹，然后将该文件目录添加到环境变量`PATH`中。
 ```bash
 $ protoc --version
 libprotoc 3.10.0
