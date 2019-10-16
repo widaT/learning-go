@@ -235,7 +235,7 @@ $ cd ../ && tree
 └── server
     └── main.go
 ```
-可以看到我们多了一个 search.pb.go的文件。
+可以看到我们多了一个 `search.pb.go`的文件。
 我们在server文件下写我们服务main.go
 ```golang
 package main
@@ -307,7 +307,147 @@ $ go run client/main.go &
 name:"hello world"  14.767013ms
 ```
 
+### grpc stream
+上面的hello world程序演示了grpc的一般用法，这种方式能满足大部分的场景。grpc还提供了双向或者单向流的方式我们成为grpc stream，stream的方式一般用在有大量的数据交互或者长时间交互。
+
+我们修改的grpc服务定义文件`pb/search.proto`,在service增加 `rpc Search2 (stream SearchRequest) returns (stream SearchReply) {}`
+```protobuf
+syntax = "proto3";
+package pb;
+service Searcher {
+    rpc Search (SearchRequest) returns (SearchReply) {}
+    rpc Search2 (stream SearchRequest) returns (stream SearchReply) {}
+}
+message SearchRequest {
+    string name = 1;
+}
+message SearchReply {
+    string name = 1;
+}
+```
+
+服务端我们修改代码，添加一个`func (s *server) Search2(pb.Searcher_Search2Server) error`的一个实现方法。
+```golang
+package main
+
+import (
+	"io"
+	"log"
+	"net"
+
+	"context"
+	"github.com/widaT/gorpc_demo/grpc/pb"
+	"google.golang.org/grpc"
+)
+
+const (
+	port = ":50051"
+)
+
+type server struct{}
+
+func (s *server) Search(ctx context.Context, in *pb.SearchRequest) (*pb.SearchReply, error) {
+	return &pb.SearchReply{Name:"hello " + in.GetName()}, nil
+}
+func (s *server) Search2(stream pb.Searcher_Search2Server) error {
+	for {
+		args, err := stream.Recv()
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+		reply := &pb.SearchReply{ Name:"hello:" + args.GetName()}
+		err = stream.Send(reply)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func main() {
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterSearcherServer(s, &server{})
+	s.Serve(lis)
+}
+```
+
+为了方便阅读代码，client代码我们重写
+```golang
+package main
+
+import (
+	"context"
+	"fmt"
+	"github.com/widaT/gorpc_demo/grpc/pb"
+	"google.golang.org/grpc"
+	"io"
+	"log"
+	"time"
+)
+
+const (
+	address = "localhost:50051"
+)
+
+func main() {
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewSearcherClient(conn)
+
+	stream, err := c.Search2(context.Background())
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() { //这边启动一个goroutine 发送请求
+		for {
+			if err := stream.Send(&pb.SearchRequest{Name: "world"}); err != nil {
+				log.Fatal(err)
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+
+	for { //主goroutine 一直接收结果
+		rep, err := stream.Recv()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			log.Fatal(err)
+		}
+		fmt.Println(rep.GetName())
+	}
+}
+```
+
+运行代码
+```bash
+$ go run server/main.go &
+$ go run client/main.go 
+hello:world
+hello:world
+hello:world
+...
+```
+
+# 总结
+本文只是对golang使用grpc做了简要的介绍，grpc的使用范围很广，需要我们持续了解和学习。
+下面推荐个资料
+- [grpc go官方examples](https://github.com/grpc/grpc-go/tree/master/examples)
+- [《Go语言高级编程》RPC和Protobuf](https://chai2010.gitbooks.io/advanced-go-programming-book/content/ch4-rpc/readme.html)
+
 # 参考文档
 
 - [grpc go](https://grpc.io/docs/quickstart/go/)
-- [grpc examples](https://github.com/grpc/grpc-go/tree/master/examples)
