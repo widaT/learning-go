@@ -370,7 +370,8 @@ func main()  {
 ```
 
 再次运行一下
-```bash$ go run main.go
+```bash
+$ go run main.go
 2019/10/18 11:31:32 time elapsed 1.162µs #调用后会出现
 2019/10/18 11:31:32 time elapsed 11.941µs
 $ curl -curl  http://localhost:8888/get
