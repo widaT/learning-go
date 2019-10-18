@@ -284,7 +284,8 @@ s.Get("/get", timeMiddleware(timeMiddleware(func(ctx *Context) {
 		})))
 ```
 运行一下
-```bash$ go run main.go
+```bash
+$ go run main.go
 2019/10/18 11:14:52 time elapsed 2.037µs    #调用后会出现
 2019/10/18 11:14:52 time elapsed 70.15µs  
 $ curl -curl  http://localhost:8888/get
