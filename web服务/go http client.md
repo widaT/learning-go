@@ -5,8 +5,7 @@ http client是一个十分高频使用的组件，特别是近几年基于http�
 
 
 ## go 的http client
-
-go的http client 标注库就有一个实现叫`http.DefaultClient`。 本文主要介绍我们比较常用场景下如何使用`http.DefaultClient`。
+go标准库实现一个叫`http.DefaultClient`的http client。 本文主要介绍我们比较常用场景下如何使用`http.DefaultClient`。
 我们先实现一个go的web服务。
 
 ```golang
@@ -66,6 +65,7 @@ func get()  {
 	fmt.Println(string(body))
 }
 ``` 
+需要注意的是 `http.DefaultClient` 实现了连接池，`resp.Body.Close()` 代表这次请求已经处理完了，连接会重新放到池子里。
 
 ## Post
 
@@ -124,8 +124,6 @@ func postjson()  {
 }
 ```
 
-
-
 ### 文件上传
 
 ```golang
@@ -158,3 +156,8 @@ func fileupload()  {
 	fmt.Println(string(body))
 }
 ```
+## go第三方http client
+标准库的http client功能基本上能满足我们的日常开发需求，当然还有第三方package 可能封装得可能更优雅。下面提供三个比较高人气的go的第三方http client实现。
+- [beego-httplib](https://github.com/astaxie/beego/tree/develop/httplib)
+- [gorequest](https://github.com/parnurzeal/gorequest)
+- [resty](https://github.com/go-resty/resty)
