@@ -118,12 +118,6 @@ func main()  {
 }
 ```
 
-然后运行
-
-```bash
-$ go run main.go
-```
-
 ## Get
 go的http client get请求相对简单，我们看下代码
 ```golang
