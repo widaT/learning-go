@@ -100,7 +100,7 @@ hello world
 		rw.WriteHeader(404) //给client发 404
 		rw.Write([]byte("page not found"))
 	}
-```
+	```
 
 到此我们知道`MyServer`的 `ServeHTTP`方法是连接go http server底层和我们写的代码的一个桥梁。我们所需要的每次http请求信息都在`http.Request`中，然后可以通过 `http.ResponseWriter`给客户端回写消息。
 
@@ -108,64 +108,64 @@ hello world
 
 接下来我们再改进下代码，定义我们自己的`HandlerFunc`和`Context`，`HandlerFunc`能让我们少写点代码，`Context`的封装则可以定制写我们框架专属的特性，例如`SayHello`方法，代码如下：
 
-```golang
-package main
-import (
-	"net/http"
-)
-type HandlerFunc func(*Context)
-type MyServer struct {
-	router map[string]map[string]HandlerFunc
-}
+	```golang
+	package main
+	import (
+		"net/http"
+	)
+	type HandlerFunc func(*Context)
+	type MyServer struct {
+		router map[string]map[string]HandlerFunc
+	}
 
-type Context struct {
-	Rw  http.ResponseWriter
-	R *http.Request
-}
-func (ctx *Context)SayHello()  {
-	ctx.Rw.WriteHeader(200)
-	ctx.Rw.Write([]byte("hello world"))
-}
-func (s *MyServer)ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	if  _,found := s.router[r.Method] ;found {
-		if fn,found :=s.router[r.Method][r.URL.Path];found {
-			fn(&Context{Rw:rw,R:r})
-			return
+	type Context struct {
+		Rw  http.ResponseWriter
+		R *http.Request
+	}
+	func (ctx *Context)SayHello()  {
+		ctx.Rw.WriteHeader(200)
+		ctx.Rw.Write([]byte("hello world"))
+	}
+	func (s *MyServer)ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+		if  _,found := s.router[r.Method] ;found {
+			if fn,found :=s.router[r.Method][r.URL.Path];found {
+				fn(&Context{Rw:rw,R:r})
+				return
+			}
+		}
+		rw.WriteHeader(404)
+		rw.Write([]byte("page not found"))
+	}
+	func (s *MyServer)Get(path string,fn HandlerFunc)  {
+		if s.router["GET"] == nil {
+			s.router["GET"] = make(map[string]HandlerFunc)
+		}
+		s.router["GET"][path] = fn
+	}
+	func (s *MyServer)Post(path string,fn HandlerFunc)  {
+		if s.router["POST"] == nil {
+			s.router["POST"] = make(map[string]HandlerFunc)
+		}
+		s.router["POST"][path] = fn
+	}
+	func NewServer() *MyServer  {
+		return &MyServer{
+			router: make(map[string]map[string]HandlerFunc),
 		}
 	}
-	rw.WriteHeader(404)
-	rw.Write([]byte("page not found"))
-}
-func (s *MyServer)Get(path string,fn HandlerFunc)  {
-	if s.router["GET"] == nil {
-		s.router["GET"] = make(map[string]HandlerFunc)
-	}
-	s.router["GET"][path] = fn
-}
-func (s *MyServer)Post(path string,fn HandlerFunc)  {
-	if s.router["POST"] == nil {
-		s.router["POST"] = make(map[string]HandlerFunc)
-	}
-	s.router["POST"][path] = fn
-}
-func NewServer() *MyServer  {
-	return &MyServer{
-		router: make(map[string]map[string]HandlerFunc),
-	}
-}
-func main()  {
-	s := NewServer()
-	s.Get("/get", func(ctx *Context) {
-		ctx.SayHello()
-	})
+	func main()  {
+		s := NewServer()
+		s.Get("/get", func(ctx *Context) {
+			ctx.SayHello()
+		})
 
-	s.Post("/post", func(ctx *Context) {
-		ctx.SayHello()
-	})
+		s.Post("/post", func(ctx *Context) {
+			ctx.SayHello()
+		})
 
-	http.ListenAndServe(":8888", s)
-}
-```
+		http.ListenAndServe(":8888", s)
+	}
+	```
 
 运行一下
 ```bash
