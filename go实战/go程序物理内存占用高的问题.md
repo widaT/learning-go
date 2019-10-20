@@ -35,7 +35,7 @@ func main()  {
 ```bash
 # top -p pid
 ```
-![1](img/1.png)
+![1](../img/1.png)
 
 在系统负载比较低的时候，你会看到程序的Res 1G 左右，而且一直不变化。这个有点反直觉，我们向系统申请的50万个512维float32型的数组，后面实际上是已经删除了，
 按理说golang的gc应该回收这个1g的内存，然后归还给系统才对，可是这样子的事情并没有发生。
@@ -111,7 +111,7 @@ madvdontneed：如果设置GODEBUG=madvdontneed=1，golang归还内存给操作�
 ```bash
 # GODEBUG=madvdontneed=1 go run main.go
 ```
-![2](img/2.png)
+![2](../img/2.png)
 这下RSS正常了。
 
 
