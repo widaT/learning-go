@@ -33,6 +33,7 @@ type ResponseWriter interface {
 
 接下来我们通过自己实现http路由来加深下go web服务运行方式的了解。
 ## 自己实现http路由
+
 ```golang
 package main
 
@@ -68,9 +69,10 @@ func main()  {
 	})
 	http.ListenAndServe(":8888", s)
 }
-
 ```
+
 运行一下
+
 ```bash
 $ go run main.go
 $ curl http://localhost:8888
@@ -85,13 +87,15 @@ hello world
 
 - 第一个参数我们上文介绍过，
 - 第二个参数是一个interface
-	```golang
+
+```golang
 	type Handler interface {
 		ServeHTTP(ResponseWriter, *Request)
 	}
-	```
+```
 	它定义了`ServeHTTP(ResponseWriter, *Request)`的方法。我们的`MyServer`刚好实现了这个方法
-	```golang
+
+```golang
 	func (s *MyServer)ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		if  fn,found := s.router[r.URL.Path] ;found {  //从 map查找对应的 paht=》http.HandlerFunc 映射
 			fn(rw,r)  //真正处理请求，返回消息给client的地方
@@ -100,7 +104,7 @@ hello world
 		rw.WriteHeader(404) //给client发 404
 		rw.Write([]byte("page not found"))
 	}
-	```
+```
 
 到此我们知道`MyServer`的 `ServeHTTP`方法是连接go http server底层和我们写的代码的一个桥梁。我们所需要的每次http请求信息都在`http.Request`中，然后可以通过 `http.ResponseWriter`给客户端回写消息。
 
@@ -108,7 +112,7 @@ hello world
 
 接下来我们再改进下代码，定义我们自己的`HandlerFunc`和`Context`，`HandlerFunc`能让我们少写点代码，`Context`的封装则可以定制写我们框架专属的特性，例如`SayHello`方法，代码如下：
 
-	```golang
+```golang
 	package main
 	import (
 		"net/http"
@@ -165,9 +169,10 @@ hello world
 
 		http.ListenAndServe(":8888", s)
 	}
-	```
+```
 
 运行一下
+
 ```bash
 $ go run main.go
 $ curl http://localhost:8888/get
