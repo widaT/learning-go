@@ -2,7 +2,7 @@
 
 ## 获取http参数
 
-### 使用 `http.Request`的 `FormValue`函数 获取post（x-www-form-urlencoded）和get参数。
+### 使用 `http.Request`的 `FormValue`方法获取post（x-www-form-urlencoded）和get参数。
 ```golang
 var addr = ":8999"
 func main()  {
@@ -22,7 +22,7 @@ $ curl -d "a=b&c=d" http://localhost:8999
 ```
 
 ### 获取post multipart/form-data参数
-获取form-data 参数我们只需要 在上面的代码中加入 `r.ParseForm()`
+获取`form-data`参数我们只需要在上面的代码中加入`r.ParseForm()`方法。
 ```golang
 var addr = ":8999"
 func main()  {
@@ -41,7 +41,7 @@ $  curl "http://localhost:8999" -F a=b -F c=d
 ```
 
 ### 获取上传文件
-获取上传文件有专门 `http.Request`的 `FormFile`函数获取文件
+获取上传文件有专门 `http.Request`的 `FormFile`方法获取文件
 ```golang
 var addr = ":8999"
 func main()  {
