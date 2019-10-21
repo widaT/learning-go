@@ -53,7 +53,75 @@ go build 有好多的个参数，其中比较常用的是
 - -race 开启编译的时候检测数据竞争。
 - -gcflags 这个参数在编译优化和逃逸分析中经常会使用到。
 
+### go build -tags
+上面我们介绍了go build 可以使用加操作系统后缀的文件名来选择性编译文件。还有一种方法来实现条件编译，那就是使用`go build -tags tag.list`
+我创建一个项目`buildtag-demo`，目录架构为
+```
+.
+├── go.mod
+├── main.go
+├── tag_d.go
+└── tag_p.go
+```
+我们在`main.go` 里头的代码是
+```golang
+package main
 
+func main()  {
+	debug()
+}
+```
+
+`tag_d.go` 代表debug场景下要编译的文件，文件内容是
+```golang
+// +build debug
+
+package main
+
+import "fmt"
+
+func debug()  {
+	fmt.Println("debug ")
+}
+``` 
+`tag_p.go` 代表生产环境下要编译的文件，文件内容是
+
+```golang
+// +build !debug
+
+package main
+func debug()  {
+	//fmt.Println("debug ")
+}
+```
+
+我们编译和运行下项目
+```bash
+$ go build
+$ ./buildtag-demo
+//nothing 没有任何输出
+$ go build -tags debug
+$ ./buildtag-demo
+debug
+```
+
+#### 使用方式
+- `+build`注释需要在`package`语句之前，而且之后还需要一行空行。
+- `+build`后面跟一些条件 只有当条件满足的时候才编译此文件。
+- `+build`的规则不仅见约束`.go`结尾的文件，还可以约束go的所有源码文件。
+
+
+#### `+build`条件语法：
+- 只能是是数字、字母、_（下划线）
+- 多个条件之间，空格表示OR；逗号表示AND；叹号(!)表示NOT
+- 可以有多行`+build`，它们之间的关系是AND。如：
+	```
+	// +build linux darwin
+	// +build 386
+	等价于
+	// +build (linux OR darwin) AND 386
+	```
+- 加上`// +build ignore`的原件文件可以不被编译。
 
 ## go get
 
@@ -78,3 +146,9 @@ go get 在go modules出现之前一直作为go获取依赖包的工具，在go m
 - go tool 这个命令聚合了很多go工具集，主要关注 go tool pprof 和 go tool cgo这两个命令，在go 性能调优和cgo的章节会讲到这两个命令。
 - go version 查看go当前的版本
 - go vet 用来分析当前目录的代码是否正确。
+
+
+
+# 参考资料
+
+- [go build -tags 试验](https://www.jianshu.com/p/858a0791f618)

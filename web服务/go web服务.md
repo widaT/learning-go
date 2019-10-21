@@ -1,6 +1,6 @@
 # go web服务
 
-在绪论中我们简单使用go写了个一个web服务，本文将展开介绍go如何写web服务。我们再看看之前的代码，
+在绪论中我们简单使用go写了个一个web服务，本文将展开介绍go如何写web服务。我们再看看之前的代码。
 ```golang
 package main
 import (
