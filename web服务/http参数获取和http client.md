@@ -1,4 +1,4 @@
-# http参数和Go http client
+# http参数获取和Go http client
 
 ## 获取http参数
 
