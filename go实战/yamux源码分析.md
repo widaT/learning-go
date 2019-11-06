@@ -5,7 +5,7 @@ yamux是golang连接多路复用（connection multiplexing）的一个库，想�
 ## 基本概念
 
 - session（会话）
-  session用于包装可靠的有序连接（net connection）并将其多路复用为多个流（stream）。
+  session用于包裹（wrap）可靠的有序连接（net connection）并将其多路复用为多个流（stream）。
 
 - stream（流）
   在session中，stream代表一个client-server逻辑流。stream有唯一且自增（+2）的id，客服端向server端的stream id为奇数，服务端向客户端发送的stream为偶数，同事0值代表session。stream是逻辑概念，传输的数据是以帧的形态传输的。
@@ -31,6 +31,19 @@ yamux是golang连接多路复用（connection multiplexing）的一个库，想�
 ## 实现原理 
 ![yamux示意图](../img/yamux1.png)
 
+ 从上图我们可以看出yamux的原理：传输过程中使用frame传输，每个frame都带有stream ID，在传输过程中stream 相同stream的数据可能不是连续的，在服务端通过逻辑映射关系整合成有序的stream。
+
+ 从原理上看不是很复杂，但是要代码实现起来可不是那么简单，特别是网络传输协议这种高频运用容不得任何错误。所以网络库中很多原理看起来简单，但是实现起来细节却通常比较恐怖。
+
+## 源码分析
+我们从run一个它的demo
+```golang
+
+```
+
+
+### 创建session
+创建session只能通过 `Server(conn io.ReadWriteCloser, config *Config) `和 `func Client(conn io.ReadWriteCloser, config *Config) ` 这两个方法创建，注意
 
 
 # 参考文档
