@@ -37,15 +37,14 @@ yamux是golang连接多路复用（connection multiplexing）的一个库，想�
 
 ### stream的状态变迁
 
-类似tcp连接，每一个stream都是有链接状态的。一个新的stream在创建的时候client会向server发送SYN信息，server端接收到SYN信息后会回传ACK信息。close的时候会给对方发送FIN，对方接收到同样会回一个FIN。这个过程会伴随整个stream的状态变迁。
+类似tcp连接，每一个stream都是有链接状态的。一个新的stream在创建的时候client会向server发送SYN信息(这边和tcp有个不一样的地方是，SYN发送后可以立即发送数据而不是等等对方ACK后再发)，server端接收到SYN信息后会回传ACK信息。close的时候会给对方发送FIN，对方接收到同样会回一个FIN。这个过程会伴随整个stream的状态变迁。
  <img src="../img/yamux2.png" width = "60%" />
 
 上图还有一种 `streamReset` 状态没有呈现，server端Accept等待队列满的时候会发`flagRST`送给client的信息，client收到这个消息后会把流状态设置成`streamReset`这个时候流会停止。
 
-上图还引出另外一个概念，window（窗口）。
-### window（可变窗口）
+### 流控制（可变窗口）
 
-window是只有 数据类型（Type 0x0）
+我们从stream状态迁移的图中看到了一个概念-window（窗口）。window是只有数据类型（Type 0x0）才有的概念。简单来说，窗口是
 
 
 ## 源码分析
