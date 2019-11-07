@@ -31,12 +31,12 @@ yamux是golang连接多路复用（connection multiplexing）的一个库，想�
 ## 实现原理 
 
 ### yamux multiplexing 如何实现的
-<img src="../img/yamux1.png" width = "80%" />
+<img src="../img/yamux1.png" width = "70%" />
  从上图我们可以看出multiplexing的原理：传输过程中使用frame传输，每个frame都带有stream ID，在传输过程中stream相同stream的数据有先后顺序但可能不是连续的，接收端通过逻辑映射关系整合成有序的stream。
 
 ### stream的状态变迁
 类似tcp连接，每一个stream都是有链接状态的。一个新的stream在创建的时候client会向server发送SYN信息，server端接收到SYN信息后会回传ACK信息。close的时候会给对方发送FIN，对方接收到同样会回一个FIN。这个过程会伴随整个stream的状态变迁。
- <img src="../img/yamux2.png" width = "80%" />
+ <img src="../img/yamux2.png" width = "60%" />
 上图还有一种 `streamReset` 状态没有呈现，server端Accept等待队列满的时候会发`flagRST`送给client的信息，client收到这个消息后会把流状态设置成`streamReset`，这个时候流会停止。
 
 从上面的分析来看，
