@@ -49,56 +49,88 @@ docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker�
 
     镜像（ Image） 和容器（ Container） 的关系，就像是面向对象程序设计中和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以创建、启动、停止、删除、暂停等。容器的实质是进程，但与直接在宿主执行的进程不同，容器进程运行于属于自己的独立的命名空间。因此容器可以拥有自己的 root 文件系统、自己的网络配置、自己的进程空间，甚至自己的用户 ID 空间。容器内的进程是运行在一个隔离的环境里，使用起来，就好像是在一个独立于宿主的系统下操作一样。这种特性使得容器封装的应用比直接在宿主运行更加安全。
 
-### linux安装docker
+## linux安装docker
 
  使用一键安装命令
  ```bash
  curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
 ```
 
-### docker的使用
+## docker的使用
+
+### 镜像管理
+
+- 获取镜像 `docker pull [OPTIONS] NAME[:TAG|@DIGEST]`
+
+  exp:
+    - `docker pull ubuntu:17.10` 从docker hub 现在镜像
+    - `docker pull http://abc.com:/ubuntu:17.10` 从其他仓库地址现在镜像 
+- 镜像列表 `docker images [OPTIONS] [REPOSITORY[:TAG]]`
+
+  exp:
+    - `docker images ` 列出本地镜像，默认不显示中间镜像（intermediate image），列表包含了 仓库名 、 标签 、 镜像 ID 、 创建时间 以及 所占用的空间 。
+        ```
+        $ docker images
+        micro-server          v1.0                bf580c3b368f        7 weeks ago         28.3MB
+        wordpress             <none>              42a9bf5a6127        8 weeks ago         502MB #悬虚镜像
+        ```
+    - `docker image ls -f dangling=true`查看所以悬虚镜像
+    - `docker image prune` 删除悬虚镜像，悬虚镜像已经没有作用可以随意删除
+    - `docker images -a` 列出本地所有的镜像
+     ```
+     $ docker images -a
+     REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
+     grafana/grafana       6.0.1               ffd9c905f698        8 months ago        241MB
+     <none>                <none>              f5690672aa36        12 months ago       133MB   #中间层级镜像
+     ```
+   - `docker image ls -f`过滤镜像
+   - `docker image ls --format` 特定格式显示列表
+
+- 删除镜像 `docker rmi [OPTIONS] IMAGE [IMAGE...]`
+exp:
+   - `docker rmi  ffd9c905f698` 删除镜像 
+   - `docker image rm $(docker image ls -q redis)` 复合命令删除名字为redis的所有镜像
+
+- 制作镜像
+    - 修改后的容器保存成镜像`docker commit --author "xxx<xxx@xxx.com>" --message "nginx" webserver nginx:v2`这个方案很少用
+    - 使用Dockerfile定制镜像
+        exp:
+        ```
+        FROM alpine:latest
+        WORKDIR /
+        COPY  cmd/server/server /
+        #EXPOSE 8000
+        CMD ["./server"]
+        ``
+    
+### 容器管理
+- 查看容器列表 `docker ps [-a]` 不带-a的只列出正在运行的容器，带-a的列出所有容器
+- 启动容器
+    - 新建启动
+    exp：
+        - `docker run ubuntu:14.04 /bin/echo 'Hello world'` 运行容器
+        - `docker run -t -i ubuntu:14.04 /bin/bash` 交互运行容器 -t 选项让Docker分配一个伪终端（ pseudo-tty） 并绑定到容器的标准输入上， -i则让容器的标准输入保持打开。
+    - 启动停止的容器`docker start container`
+- 终止容器 `docker stop container`
+- 进入容器 
+    - `docker attach container`
+    - `docker exec container`  
+        exp:docker exec -it container 
+- 删除容器
+    - `docker rm container` 删除制定容器，首先得stop容器
+    - `docker container prune`删除所有停止容器
 
 ```bash
-启动docker
-sudo service docker start
 
-//守护进程的
-docker run -id -p 8000:80 --name webserver nginx:v2 
 
-//进入已经运行的容器内部
-docker exec -it webserver bash
-
-//commit 制作镜像
-docker commit --author "xxx<xxx@xxx.com>" --message "nginx" webserver nginx:v2
-
-//删除一个已经停止的容器
-docker rm webserver
-
-//删除镜像
-docker rmi imageid
 
 //删除所以已经停止运行的容器
 docker rm $(docker ps -a -q)
 
-//用dockerfile 构建镜像
-docker build -t nginx:v3 .
-
-//删除悬虚镜像
-docker image prune
-
 //数据卷
 docker run -id -p 8010:50051 -v /path:/container_path/:rw --name demo demo:v1
-
-//镜像过滤
-docker image ls -f since=mongo:3.2
-
-//docker push 到docker hub
-//打tag
-docker tag ubuntu:17.10 username/ubuntu:17.10
-
-//push 
-docker push username/ubuntu:17.10
-
-//search
-docker search username
 ```
+## 总结
+
+
+## 参考资料
