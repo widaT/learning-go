@@ -38,7 +38,7 @@ docker client（docker）是docker用户与docker交互的主要方式。使用�
 docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker仓库，默认情况下docker在[Docker Hub](http://hub.docker.com)上查找镜像。用户也可以运行自己的私人镜像
 
 
-### Docker 对象
+### Docker对象
 
 - docker镜像
 
@@ -102,35 +102,51 @@ exp:
         #EXPOSE 8000
         CMD ["./server"]
         ``
-    
+- 镜像仓库管理
+    - `docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]` 设置镜像标签，这
+       exp ：
+       ```
+        docker tag 860c279d2fec wida/nginx:v1
+       ```
+    - `docker push [OPTIONS] NAME[:TAG]`向远程镜像仓库推送标签的镜像
+       exp：
+       `docker push wida/nginx:v1` 这边是往docker hub推送
+
 ### 容器管理
+
 - 查看容器列表 `docker ps [-a]` 不带-a的只列出正在运行的容器，带-a的列出所有容器
 - 启动容器
     - 新建启动
     exp：
         - `docker run ubuntu:14.04 /bin/echo 'Hello world'` 运行容器
-        - `docker run -t -i ubuntu:14.04 /bin/bash` 交互运行容器 -t 选项让Docker分配一个伪终端（ pseudo-tty） 并绑定到容器的标准输入上， -i则让容器的标准输入保持打开。
+        - `docker run -t -i ubuntu:14.04 /bin/bash` 交互运行容器，-t让Docker分配一个伪终端并绑定到容器的标准输入上， -i则让容器的标准输入保持打开。
+        - `docker run -id -p 8000:80 --name webserver nginx:v2` 使用-d后台运行
     - 启动停止的容器`docker start container`
-- 终止容器 `docker stop container`
+- 停止容器 `docker stop container`
 - 进入容器 
-    - `docker attach container`
+    - `docker attach container` 不建议使用
     - `docker exec container`  
-        exp:docker exec -it container 
+        exp:docker exec  -i -t  nginx /bin/bash 让容器打开终端交互模式
 - 删除容器
     - `docker rm container` 删除制定容器，首先得stop容器
-    - `docker container prune`删除所有停止容器
+    - `docker container prune` 删除所有停止容器
 
-```bash
+### Docker数据持久化
 
+- 数据卷
+- 数据卷容器
 
+### Docker网络
 
-//删除所以已经停止运行的容器
-docker rm $(docker ps -a -q)
+- 网络端口映射
+- 容器互联
 
-//数据卷
-docker run -id -p 8010:50051 -v /path:/container_path/:rw --name demo demo:v1
-```
 ## 总结
+
+本文只是初略的介绍docker常用的一些命令，关于的docker的高级运用，建议大家看下docker官方的文档[Docker Documentation](https://docs.docker.com/)。
 
 
 ## 参考资料
+
+- [Docker Documentation](https://docs.docker.com/)
+- [《docker_practice》](https://github.com/yeasy/docker_practice)
