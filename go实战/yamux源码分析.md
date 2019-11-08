@@ -1,4 +1,4 @@
-# yamux源码分析
+# 深入理解yamux
 
 yamux是golang连接多路复用（connection multiplexing）的一个库，想法来源于google的SPDY（也就是后来的http2）。yamux能用很小的代价在一个真实连接（net connection）上实现上千个Client-Server逻辑流。
 
@@ -42,22 +42,148 @@ yamux是golang连接多路复用（connection multiplexing）的一个库，想�
 
 上图还有一种 `streamReset` 状态没有呈现，server端Accept等待队列满的时候会发`flagRST`送给client的信息，client收到这个消息后会把流状态设置成`streamReset`这个时候流会停止。
 
-### 流控制（可变窗口）
+### 流控制(Flow Control)
 
-我们从stream状态迁移的图中看到了一个概念-window（窗口）。window是只有数据类型（Type 0x0）才有的概念。简单来说，窗口是
+类似TCP的流控制，yamux也提供一种机制可以让发送端根据接收端接收能力控制发送的数据的大小。Tcp流控制的操作是接收端向发送端通知自己可以接收数据的大小，发送端会发送不超过这个限度的数据。这个大小限度就被称作窗口（window）大小。我们从stream状态迁移的图中看到了一个概念-window（窗口），就是和Tcp窗口类似的概念。
 
+yamux的每个stream的初始窗口为256k，当然这个值是是可以配置修改的，在stream的SYN和ACK的消息交互中就带了窗口大小的协商。
+
+窗口的大小由接收端决定的，接收端将自己可以接收的缓冲区大小通`typeWindowUpdate`类型的Header发送给发送端，发送端根据这个值调整自己发送数据的大小，如果发现是0就会阻塞发送。
 
 ## 源码分析
-我们从run一个它的demo
-```golang
-
-```
 
 ### 创建session
-创建session只能通过 `Server(conn io.ReadWriteCloser, config *Config) `和 `func Client(conn io.ReadWriteCloser, config *Config) ` 这两个方法创建，注意
+创建session只能通过 `Server(conn io.ReadWriteCloser, config *Config) `和 `func Client(conn io.ReadWriteCloser, config *Config) ` 这两个方法创建,本质上都调用了`newSession`的方法。我们具体看下`newSession`的方法。
 
+```golang
+func newSession(config *Config, conn io.ReadWriteCloser, client bool) *Session {
+...
+	s := &Session{
+		config:     config,
+		logger:     logger,
+		conn:       conn,                  //真实连接（实际上io.ReadWriteCloser）
+		bufRead:    bufio.NewReader(conn),           
+		pings:      make(map[uint32]chan struct{}),
+		streams:    make(map[uint32]*Stream),         //流映射
+		inflight:   make(map[uint32]struct{}),
+		synCh:      make(chan struct{}, config.AcceptBacklog), 
+		acceptCh:   make(chan *Stream, config.AcceptBacklog), // 控制accept 队列长度
+		sendCh:     make(chan sendReady, 64), //发送的队列长度
+		recvDoneCh: make(chan struct{}),    //recvloop 终止信号
+		shutdownCh: make(chan struct{}),     //session 关闭信号
+	}
+	if client {
+		s.nextStreamID = 1    //client端的话初始stream Id是1
+	} else {
+		s.nextStreamID = 2    //client端的话初始stream Id是2
+	}
+	go s.recv()      //循环读取真实连接frame数据，然后分发到相应的message-type handler
+	go s.send()      //循环通过真实连接发送frame数据
+	if config.EnableKeepAlive {
+		go s.keepalive() //通过`ping`心跳保持连接
+	}
+	return s
+}
+```
+
+从上面的代码我们可以看出client和server唯一的区别是`nextStreamID`不一样，发送和接收数据的方式并没有区别。
+
+`Session.recv() `实际调用的是`Session.recvLoop`方法
+```golang
+defer close(s.recvDoneCh)
+	hdr := header(make([]byte, headerSize))
+	for {
+		// Read the header
+		if _, err := io.ReadFull(s.bufRead, hdr); err != nil {  //读取 frame Header
+			...省略错误处理代码
+        }
+        ...省略版本确认代码
+		mt := hdr.MsgType()
+		if mt < typeData || mt > typeGoAway {  //验证header type
+			return ErrInvalidMsgType
+		}
+
+        if err := handlers[mt](s, hdr); err != nil {  //handle header type 
+           ...省略代码
+		}
+	}
+```
+
+handlers 是一个全局变量，已经初始化的一个函数指针数组
+
+```golang
+handlers = []func(*Session, header) error{
+		typeData:         (*Session).handleStreamMessage,
+		typeWindowUpdate: (*Session).handleStreamMessage,
+		typePing:         (*Session).handlePing,
+		typeGoAway:       (*Session).handleGoAway,
+	}
+```
+
+我们重点关注 `handleStreamMessage`方法，这个方法处理`typeWindowUpdate`和`typeData`这两个核心的消息类型。
+
+```golang
+func (s *Session) handleStreamMessage(hdr header) error {
+	id := hdr.StreamID()
+	flags := hdr.Flags()
+	if flags&flagSYN == flagSYN {
+		if err := s.incomingStream(id); err != nil { //如果是SYN信号，在接收端初始化stream，改变状态stream状态，通过 Session.acceptCh管道通知 接收端有新的stream
+			return err
+		}
+	}
+	// Get the stream
+	s.streamLock.Lock()
+	stream := s.streams[id]
+	s.streamLock.Unlock()
+
+     ...省略代码
+	if hdr.MsgType() == typeWindowUpdate {
+		if err := stream.incrSendWindow(hdr, flags); err != nil { //如果是typeWindowUpdate类型，这个调节本地发送窗口（sendWindow），触发`sendNotifyCh`可以发送更多数据
+			...省略错误处理代码
+			return err
+		}
+		return nil
+	}
+	if err := stream.readData(hdr, flags, s.bufRead); err != nil { //读取body
+		...省略错误处理代码
+		return err
+	}
+	return nil
+}
+```
+
+总得来说 recv 的工作职责就是，读取每一个frame header，然后根据header type handle到不同的处理函数中。
+
+`Session.send()`方法就相对简单些，职责是用底层真实链接发送frame给接收方。
+```golang
+func (s *Session) send() {
+	for {
+		select {
+		case ready := <-s.sendCh:  //从缓冲管道（队列）获取frame
+			if ready.Hdr != nil {
+				sent := 0
+				for sent < len(ready.Hdr) {
+					n, err := s.conn.Write(ready.Hdr[sent:]) //先写header
+					if err != nil {
+					    ...省略错误处理代码
+						return
+					}
+					sent += n
+				}
+			}
+			if ready.Body != nil {  //如果有body写body
+				_, err := io.Copy(s.conn, ready.Body)
+				if err != nil {
+					...省略错误处理代码
+				}
+			}
+            ...省略版本确认代码
+	}
+}
+```
 
 # 参考文档
 
 - [yamux](https://github.com/hashicorp/yamux/blob/master/spec.md)
 - [go-libp2p 之 NewStream 深层阅读笔记](https://www.jianshu.com/p/14781d900501)
+- [TCP流量控制与拥塞控制](https://www.jianshu.com/p/ad88e08e5dc8)
