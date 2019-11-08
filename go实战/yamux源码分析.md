@@ -52,7 +52,7 @@ yamux的每个stream的初始窗口为256k，当然这个值是是可以配置�
 
 ## 源码分析
 
-### 创建session
+### 创建session和数据读写
 创建session只能通过 `Server(conn io.ReadWriteCloser, config *Config) `和 `func Client(conn io.ReadWriteCloser, config *Config) ` 这两个方法创建,本质上都调用了`newSession`的方法。我们具体看下`newSession`的方法。
 
 ```golang
@@ -127,7 +127,7 @@ func (s *Session) handleStreamMessage(hdr header) error {
 	id := hdr.StreamID()
 	flags := hdr.Flags()
 	if flags&flagSYN == flagSYN {
-		if err := s.incomingStream(id); err != nil { //如果是SYN信号，在接收端初始化stream，改变状态stream状态，通过 Session.acceptCh管道通知 接收端有新的stream
+		if err := s.incomingStream(id); err != nil { //如果是SYN信号，在接收端初始化stream作为发送端的副本和发送的stream保持通讯和协同window大小。创建后又通过 
 			return err
 		}
 	}
@@ -177,13 +177,165 @@ func (s *Session) send() {
 					...省略错误处理代码
 				}
 			}
-            ...省略版本确认代码
+            ...省略代码
 	}
 }
 ```
 
+### Stream创建和数据读写
+
+Stream的创建一定是先在发送端创建的，然后通过一个`SYN`信号的发送到了接收方，`Session.incomingStream`的接收的stream就是从客户端发送过来的。
+
+```golang
+func (s *Session) OpenStream() (*Stream, error) {
+	 ...省略代码
+GET_ID:
+	id := atomic.LoadUint32(&s.nextStreamID)
+     ...省略代码
+	if !atomic.CompareAndSwapUint32(&s.nextStreamID, id, id+2) {
+		goto GET_ID
+	}
+
+	stream := newStream(s, id, streamInit)  //创建新的stream，注意streamInit 状态和上面状态迁移的图对应这看
+	s.streamLock.Lock()
+	s.streams[id] = stream //这边发送端注册stream 
+	s.inflight[id] = struct{}{}
+	s.streamLock.Unlock()
+	if err := stream.sendWindowUpdate(); err != nil {  //通知接收方有新的stream创建，stream状态改成flagSYN，还把window的size告诉接收方
+		select {
+		case <-s.synCh:
+		default:
+			...省略错误处理代码
+		}
+		return nil, err
+	}
+	return stream, nil
+}
+```
+这边对照这`Session.incomingStream`的代码一块看
+```golang
+func (s *Session) incomingStream(id uint32) error {
+    ...省略错误处理代码
+	stream := newStream(s, id, streamSYNReceived)  //id和客户端的一样。状态迁移
+	s.streamLock.Lock()
+	defer s.streamLock.Unlock()
+	if _, ok := s.streams[id]; ok {
+		...省略错误处理代码
+		return ErrDuplicateStream
+	}
+	s.streams[id] = stream  //在接收到注册新的stream
+	select {
+	case s.acceptCh <- stream:  //通过 Session.acceptCh管道通知接收端有新的stream
+		return nil
+	default:
+	...省略错误处理代码
+	}
+}
+```
+Stream的读取操作
+
+```golang
+func (s *Stream) Read(b []byte) (n int, err error) {
+	defer asyncNotify(s.recvNotifyCh)
+START:
+	...省略状态判断代码
+
+	s.recvLock.Lock()
+	if s.recvBuf == nil || s.recvBuf.Len() == 0 {
+		s.recvLock.Unlock()
+		goto WAIT
+	}
+
+	n, _ = s.recvBuf.Read(b)
+	s.recvLock.Unlock()
+
+	err = s.sendWindowUpdate() //这边就是上文提到流控相关的代码，向发送端发送改变window大小的信息，调节（增加）发送端发送流量。
+	return n, err
+
+WAIT:
+	var timeout <-chan time.Time
+	var timer *time.Timer
+	readDeadline := s.readDeadline.Load().(time.Time)
+	if !readDeadline.IsZero() {  //读超时判断
+		delay := readDeadline.Sub(time.Now())
+		timer = time.NewTimer(delay)
+		timeout = timer.C
+	}
+	select {
+	case <-s.recvNotifyCh:  
+		if timer != nil {
+			timer.Stop()
+		}
+		goto START
+	case <-timeout:
+		return 0, ErrTimeout
+	}
+}
+```
+
+stream的写操作，yamux稍微做了下个封装，来处理由于window大小限制带来的`分包`发送问题。
+```golang
+func (s *Stream) Write(b []byte) (n int, err error) {
+	s.sendLock.Lock()
+	defer s.sendLock.Unlock()
+	total := 0
+	for total < len(b) { //被分包了
+		n, err := s.write(b[total:]) 
+		total += n
+		if err != nil {
+			return total, err
+		}
+	}
+	return total, nil
+}
+
+func (s *Stream) write(b []byte) (n int, err error) {
+	var flags uint16
+	var max uint32
+	var body io.Reader
+START:
+    ...省略状态判断代码
+	window := atomic.LoadUint32(&s.sendWindow)
+	if window == 0 {
+		goto WAIT
+	}
+
+	flags = s.sendFlags()
+	max = min(window, uint32(len(b)))
+	body = bytes.NewReader(b[:max])
+	s.sendHdr.encode(typeData, flags, s.id, max)     //封装header
+	if err = s.session.waitForSendErr(s.sendHdr, body, s.sendErr); err != nil { //封装sendReady{Hdr: hdr, Body: body, Err: errCh}给 Session.sendCh 管道，然后Session.send会发送这个frame
+	select {
+	case s.sendCh <- ready:
+		return 0, err
+	}
+	atomic.AddUint32(&s.sendWindow, ^uint32(max-1)) //减少sendWindow大小
+	return int(max), err
+
+WAIT:
+	var timeout <-chan time.Time
+	writeDeadline := s.writeDeadline.Load().(time.Time)
+	if !writeDeadline.IsZero() { //写超时判断
+		delay := writeDeadline.Sub(time.Now())
+		timeout = time.After(delay)
+	}
+	select {
+	case <-s.sendNotifyCh: //可以在发送的信号
+		goto START
+	case <-timeout:
+		return 0, ErrTimeout
+	}
+	return 0, nil
+}
+```
+
+总的来说，了解`connection multiplexing`的工作原理后在看代码会非常容易理解，如果不懂原理直接看代码就会非常晦涩难懂，特别是向golang这样，一个`channel`或者`interface`之后代码上下文就不好联系上。
+
+## 总结
+
+yamux的原理和代码分析到这边，我大致等了解它的工作原理，这对我们了解grpc和http2非常有帮助。yamux作为golang生态中优秀的connection multiplexing库目前被广泛用在p2p领域。
+
 # 参考文档
 
-- [yamux](https://github.com/hashicorp/yamux/blob/master/spec.md)
-- [go-libp2p 之 NewStream 深层阅读笔记](https://www.jianshu.com/p/14781d900501)
-- [TCP流量控制与拥塞控制](https://www.jianshu.com/p/ad88e08e5dc8)
+- [yamux spec](https://github.com/hashicorp/yamux/blob/master/spec.md)
+- [yamux](https://github.com/hashicorp/yamux)
