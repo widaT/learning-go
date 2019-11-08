@@ -335,7 +335,7 @@ WAIT:
 
 yamux的原理和代码分析到这边，我大致等了解它的工作原理，这对我们了解grpc和http2非常有帮助。yamux作为golang生态中优秀的connection multiplexing库目前被广泛用在p2p领域。
 
-# 参考文档
+## 参考文档
 
 - [yamux spec](https://github.com/hashicorp/yamux/blob/master/spec.md)
 - [yamux](https://github.com/hashicorp/yamux)
