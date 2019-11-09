@@ -60,13 +60,9 @@ docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker�
 ### 镜像管理
 
 - 获取镜像 `docker pull [OPTIONS] NAME[:TAG|@DIGEST]`
-
-  exp:
     - `docker pull ubuntu:17.10` 从docker hub 现在镜像
     - `docker pull http://abc.com:/ubuntu:17.10` 从其他仓库地址现在镜像 
 - 镜像列表 `docker images [OPTIONS] [REPOSITORY[:TAG]]`
-
-  exp:
     - `docker images ` 列出本地镜像，默认不显示中间镜像（intermediate image），列表包含了 仓库名 、 标签 、 镜像 ID 、 创建时间 以及 所占用的空间 。
         ```
         $ docker images
@@ -76,24 +72,22 @@ docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker�
     - `docker image ls -f dangling=true`查看所以悬虚镜像
     - `docker image prune` 删除悬虚镜像，悬虚镜像已经没有作用可以随意删除
     - `docker images -a` 列出本地所有的镜像
-     ```
-     $ docker images -a
-     REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
-     grafana/grafana       6.0.1               ffd9c905f698        8 months ago        241MB
-     <none>                <none>              f5690672aa36        12 months ago       133MB   #中间层级镜像
-     ```
+        ```
+        $ docker images -a
+        REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
+        grafana/grafana       6.0.1               ffd9c905f698        8 months ago        241MB
+        <none>                <none>              f5690672aa36        12 months ago       133MB   #中间层级镜像
+        ```
    - `docker image ls -f`过滤镜像
    - `docker image ls --format` 特定格式显示列表
 
 - 删除镜像 `docker rmi [OPTIONS] IMAGE [IMAGE...]`
-exp:
    - `docker rmi  ffd9c905f698` 删除镜像 
    - `docker image rm $(docker image ls -q redis)` 复合命令删除名字为redis的所有镜像
 
 - 制作镜像
     - 修改后的容器保存成镜像`docker commit --author "xxx<xxx@xxx.com>" --message "nginx" webserver nginx:v2`这个方案很少用
     - 使用Dockerfile定制镜像
-        exp:
         ```
         FROM alpine:latest
         WORKDIR /
@@ -102,21 +96,16 @@ exp:
         CMD ["./server"]
         ``
 - 镜像仓库管理
-    - `docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]` 设置镜像标签，这
-       exp ：
-       ```
-        docker tag 860c279d2fec wida/nginx:v1
-       ```
+    - `docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]` 设置镜像标签
+        - `docker tag 860c279d2fec wida/nginx:v1`
     - `docker push [OPTIONS] NAME[:TAG]`向远程镜像仓库推送标签的镜像
-       exp：
-       `docker push wida/nginx:v1` 这边是往docker hub推送
+       - `docker push wida/nginx:v1` 这边是往docker hub推送
 
 ### 容器管理
 
 - 查看容器列表 `docker ps [-a]` 不带-a的只列出正在运行的容器，带-a的列出所有容器
 - 启动容器
     - 新建启动
-    exp：
         - `docker run ubuntu:14.04 /bin/echo 'Hello world'` 运行容器
         - `docker run -t -i ubuntu:14.04 /bin/bash` 交互运行容器，-t让Docker分配一个伪终端并绑定到容器的标准输入上， -i则让容器的标准输入保持打开。
         - `docker run -id -p 8000:80 --name webserver nginx:v2` 使用-d后台运行
