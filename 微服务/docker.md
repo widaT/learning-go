@@ -133,18 +133,38 @@ exp:
 
 ### Docker数据持久化
 
+docker 容器内是不适合做数据存储的，通常我们会把数据存到容器外，主要有以下两种方式：
 - 数据卷
-- 数据卷容器
+    - `docker volume create myvol` 创建数据卷
+    - `docker run -id  -v myvol:/data/app --name damov1 damo:v1` 挂载数据卷到容器/data/app
+- 挂载主机目录
+    - `docker run -id  -v /data/local/app:/data/app --name damov1 damo:v1` 挂载宿主机目录到容器目录/data/app
 
 ### Docker网络
 
-- 网络端口映射
+- 网络端口映射 
+    - `-P`是容器内部端口随机映射到主机的高端口。
+        - `docker run -d -P --name damov1 damo:v1` 随机映射端口到容器的开放端口上
+    - `-p`是容器内部端口绑定到指定的主机端口。
+        - `docker run -id -p 8010:50051 --name damov1 damo:v1` 将容器的端口50051映射到宿主机8010上
+        - `docker run -id -p 127.0.0.1::50051 --name damov1 damo:v1`将容器50051映射到localhost的随机端口上
+        - `docker run -id -p 8010:50051/udp --name damov1 damo:v1`指定network类型，容器udp 50051端口映射到宿主机udp 8010端口。不写默认都是tcp。
+
 - 容器互联
+    两个容器要互相通讯需要如下步骤
+    - 建立新的网络 `docker network create -d bridge mynet`
+    - 运行容器1指定network`docker run -it --rm --name server1 --network mynet busybox sh` 
+    - 运行容器2指定network和容器1相同`docker run -it --rm --name server2 --network mynet busybox sh`
+      ```
+      / # ping server1
+        PING server1 (172.18.0.2): 56 data bytes
+        64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.167 ms
+        64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.151 ms
+     ```
 
 ## 总结
 
-本文只是初略的介绍docker常用的一些命令，关于的docker的高级运用，建议大家看下docker官方的文档[Docker Documentation](https://docs.docker.com/)。
-
+本文只是介绍docker常用的一些命令，关于的docker的高级运用，建议大家看下docker官方的文档[Docker Documentation](https://docs.docker.com/)。另外docker本身到的容器编排工具docker-swarm将在容器编排小节一块介绍。
 
 ## 参考资料
 
