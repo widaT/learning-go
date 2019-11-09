@@ -4,8 +4,7 @@
 
 docker是基于golang语言开发，基于linux kernel的cgroup和namespace，以及union Fs等技术对进程进行封装和隔离的轻量级容器。
 
-<img src="../img/docker1.png" width = "40%" />
-<img src="../img/docker2.png" width = "40%" />
+<img src="../img/docker1.png" width = "40%" /><img src="../img/docker2.png" width = "40%" />
 
 相比较传统的虚拟机（VM）,docker和其他docker容器贡献宿主机内核，所以运行一个docker容器中的程序相当快。而VM则占用很多程序逻辑以外的开销。
 
