@@ -65,7 +65,7 @@
 
 ## demo代码
 
-[传送门](../leaning-go-code)
+[传送门](../../leaning-go-code)
 
 ## 知识图谱
 
