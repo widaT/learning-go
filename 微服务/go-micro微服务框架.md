@@ -5,7 +5,7 @@ Go Micro是可插拔的微服务开发框架。micro的设计哲学是可插拔�
 
 ## 安装go-micro依赖
     
--   安装protobuf 参考grcp和protobuf中protobuf的安装方式
+-   安装protobuf 参考[grcp和protobuf](./grpc和protobuf.md) 中protobuf的安装方式
 -   安装protoc-gen-micro，这个是go-micro定制的protobuf插件，用于生成go-micro定制的类似grpc的代码。
     ```
     go get github.com/micro/protoc-gen-micro
