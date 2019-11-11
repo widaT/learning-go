@@ -23,7 +23,6 @@ func NewConig(o ...option)  *Config{
 }
 
 func writeA(a string)  option{
-
 	return func(c *Config) {
 		c.A=a
 	}
@@ -36,17 +35,11 @@ func writeB(b int) option{
 }
 
 func main()  {
-
 	a := writeA("amy")
 	b := writeB(6)
-
-
 	c := NewConig(a,b)
-
 	fmt.Println(c)
-
 }
-
 ```
 
 运行：
