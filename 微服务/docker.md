@@ -87,7 +87,20 @@ docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker�
 
 - 制作镜像
     - 修改后的容器保存成镜像`docker commit --author "xxx<xxx@xxx.com>" --message "nginx" webserver nginx:v2`这个方案很少用
-    - 使用Dockerfile定制镜像
+    - 使用Dockerfile定制镜像,这种方式比较主流
+
+        Dockerfile命令
+         - FROM  制定基础镜像，例如`FROM alpine:latest`代表在`alpine:latest`基础镜像上构建新的镜像
+         - RUN   执行shell命令 例如 `RUN apt-get update` 更新apt的源
+         - COPY  拷贝本地文件到镜像中 `COPY cmd/server/server /`拷贝server到根目录
+         - ADD   加强版的COPY，支持url文件拷贝
+         - CMD   用于指定容器主进程的启动命令`CMD ["./server"]`
+         - ENTRYPOINT 和CMD功能类似，稍微有点不同的是在运行容器的时候参数会附加到后面
+         - ENV   用于设置环境变量，容器很多运用都会通过读环境变量的方式来实现灵活配置，`ENV MYSQL_ROOT_PASSWORD=root`
+         - VOLUME  定义匿名卷，一般用于防止向容器写入大量数据。
+         - EXPOSE  声明容器运行时的服务端口，运行容器的时候不会真的绑定这个端口
+         - WORKDIR 指定工作路径，如果你的程序用的相对路径的配置文件的话，指定工作路径就能派上用场。
+         - USER    指定用户
         ```
         FROM alpine:latest
         WORKDIR /
@@ -145,7 +158,7 @@ docker 容器内是不适合做数据存储的，通常我们会把数据存到�
     - 运行容器1指定network`docker run -it --rm --name server1 --network mynet busybox sh` 
     - 运行容器2指定network和容器1相同`docker run -it --rm --name server2 --network mynet busybox sh`
       ```
-      / # ping server1
+        # ping server1
         PING server1 (172.18.0.2): 56 data bytes
         64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.167 ms
         64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.151 ms
