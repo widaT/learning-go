@@ -95,6 +95,7 @@ docker仓库存储Docker镜像。Docker Hub是任何人都可以使用的Docker�
         #EXPOSE 8000
         CMD ["./server"]
         ``
+        `docker build -t wida/micro-service:v1.0 .` 使用docker build 生产镜像
 - 镜像仓库管理
     - `docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]` 设置镜像标签
         - `docker tag 860c279d2fec wida/nginx:v1`
