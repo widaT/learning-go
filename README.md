@@ -18,9 +18,8 @@
 
 ## go并发编程
 
-- [发和并行(未完)](./go并发编程/发和并行.md)
-- [并发模型(未完)](./go并发编程/并发模型.md)
-- [原子操作(未完)](./go并发编程/原子操作.md)
+- [发和并行](./go并发编程/发和并行.md)
+- [原子操作](./go并发编程/原子操作.md)
 - [goroutine同步(未完)](./go并发编程/goroutine同步.md)
 
 ## go web服务
@@ -52,7 +51,6 @@
 
 
 ## go runtime
-
 - [go map(未完)](./go-runtime/go-map.md)
 - [go channel](./go-runtime/go-channel.md)
 
