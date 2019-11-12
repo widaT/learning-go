@@ -137,7 +137,60 @@ func main() {
 	fmt.Println("the end")
 }
 ```
+这是个常用的1对n的生产消费模型，常常用于消费redis队列。
+```golang
+package main
+import (
+	"os"
+	"fmt"
+	"os/signal"
+	"syscall"
+	"sync"
+)
 
+var quit bool = false
+const THREAD_NUM  = 5
+func main() {
+	sigs := make(chan os.Signal, 1)
+	//signal.Notify 注册这个给定的通道用于接收特定信号。
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGUSR1, syscall.SIGUSR2)
+	quitChan := make(chan bool)
+	rowkeyChan := make(chan string, THREAD_NUM)
+	go func() {
+		 <-sigs  //等待信号
+		quit = true
+		close(rowkeyChan)
+	}()
+	var wg sync.WaitGroup
+	for i := 0; i < THREAD_NUM;i++ {
+		wg.Add(1)
+		go func(n int) {
+			for {
+				rowkey,ok := <- rowkeyChan
+				if !ok {
+					break
+				}
+				//do something with rowkey
+				fmt.Println(rowkey)
+			}
+			wg.Done()
+		}(i)
+	}
+	go func() {
+		wg.Wait()
+		quitChan <- true
+	}()
 
+	for  !quit {
+		//rowkey 可能来着redis的队列
+		rowkey := ""
+		rowkeyChan <- rowkey
+	}
+	<- quitChan
+}
+
+```
 
 ## 总结
+
+本小节列举了goroutine常见的几个同步方式，goroutine不仅支持传统的“进程”同步方式，更重要的是通过channel的新型同步方式。下一小节我们将深入channel的运用。
