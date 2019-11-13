@@ -280,7 +280,7 @@ hello
 hello
 ```
 
-当然我们还可以使用 
+当然我们还可以使用 `context.WithTimeout`的方式
 
 ```golang
 package main
