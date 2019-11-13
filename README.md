@@ -20,7 +20,8 @@
 
 - [并发和并行](./go并发编程/并发和并行.md)
 - [原子操作](./go并发编程/原子操作.md)
-- [goroutine同步(未完)](./go并发编程/goroutine同步.md)
+- [goroutine同步](./go并发编程/goroutine同步.md)
+- [使用channel做goroutine同步](./go并发编程/使用channel做goroutine同步.md)
 
 ## go web服务
 
@@ -37,12 +38,14 @@
 - [go使用es](./go和数据库/go使用es.md)
 
 ## 网络编程
+
 - [go网络编程(未完)](./go网络编程/go网络编程.md)
 - [go tcp upd服务(未完)](./go-tcp-upd服务.md.md)
 - [go-socks5实现(未完)](./go网络编程/go-socks5实现.md)
 - [深入理解connection-multiplexing](./go网络编程/深入理解connection-multiplexing.md)
 
 ## go微服务
+
 - [微服务](./微服务/微服务.md)
 - [grpc和protobuf](./微服务/grpc和protobuf.md)
 - [docker](./微服务/docker.md)
@@ -51,6 +54,7 @@
 
 
 ## go runtime
+
 - [go map(未完)](./go-runtime/go-map.md)
 - [go channel](./go-runtime/go-channel.md)
 
@@ -67,8 +71,6 @@
 - [go调试器](./go实战/go调试器.md)
 - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
 - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)
-
-
 
 ## demo代码
 
