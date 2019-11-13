@@ -294,9 +294,11 @@ func main() {
 	exit := make(chan struct{})
 	ctx,_ := context.WithTimeout(context.Background(),3*time.Second) //使用带超时的context
 	task := func(ctx context.Context) {
+		HE:
 		for {
 			select {
 			case <-ctx.Done(): //cancel函数已经被执行了
+				break HE       //退出for循环
 			default:
 				time.Sleep(1e9)
 				fmt.Println("hello")
