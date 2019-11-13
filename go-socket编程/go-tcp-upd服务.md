@@ -151,6 +151,76 @@ client1 recv：nice to meet you to
 
 
 ### 自定义文本协议解析
+```golang
 
+package main
+
+import (
+	"fmt"
+	"strconv"
+)
+
+// *2\r\n$4\r\nLLEN\r\n$6\r\nmylist\r\n
+
+func parse(buf []byte)  {
+	i:=0
+	start:=0
+	isNum := false
+	for i < len(buf){
+		switch  buf[i] {
+			case '*':
+				start = i+1
+				isNum = true
+		    case '\n':
+		    	part := buf[start:i-1]
+		    	if isNum {
+		    		strconv.Atoi(string(part))
+				}
+		    	isNum = false
+		    	fmt.Println(string(part))
+				start = i+1
+			case '$':
+				start = i+1
+				isNum = true
+			default:
+		}
+		i++
+
+	}
+}
+
+
+func main() {
+
+	parse([]byte("*2\r\n$4\r\nLLEN\r\n$6\r\nmylist\r\n"))
+
+	/*addr := ":8088"
+	l, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for {
+		conn, err := l.Accept()
+		if err != nil {
+			log.Fatal(err)
+		}
+		handle := func(conn net.Conn) {
+			buf := make([]byte,1024)
+
+			n,_:=conn.Read(buf)
+
+			buf =buf[:n]
+
+
+
+
+
+		}
+		go handle(conn)
+	}*/
+
+}
+
+```
 
 ### 自定义二进制协议
