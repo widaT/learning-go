@@ -92,3 +92,266 @@ Server端按以下格式返回给Client端：
     - 0x04 IPv6地址，16个字节长度。
 - BND.ADDR Server端绑定的地址
 - BND.PORT 网络字节序表示的Server端绑定的端口
+
+## 用go实现socks5
+
+```golang
+package main
+
+import (
+	"errors"
+	"fmt"
+	"io"
+	"log"
+	"net"
+	"strconv"
+	"strings"
+)
+const (
+	IPV4ADDR = uint8(1) //ipv4地址
+	DNADDR   = uint8(3) //域名地址
+	IPV6ADDR = uint8(4) //地址
+	CONNECTCMD = uint8(1)
+	SUCCEEDED                     = uint8(0)
+	NETWORKUNREACHABLE            = uint8(3)
+	HOSTUNREACHABLE               = uint8(4)
+	CONNECTIONREFUSED             = uint8(5)
+	COMMANDNOTSUPPORTED           = uint8(7)
+)
+
+type Addr struct {
+	Dn   string
+	IP   net.IP
+	Port int
+}
+func (a Addr) Addr() string {
+	if 0 != len(a.IP) {
+		return net.JoinHostPort(a.IP.String(), strconv.Itoa(a.Port))
+	}
+	return net.JoinHostPort(a.Dn, strconv.Itoa(a.Port))
+}
+
+
+type Command struct {
+	Version      uint8
+	Command      uint8
+	RemoteAddr   *Addr
+	DestAddr     *Addr
+	RealDestAddr *Addr
+	reader       io.Reader
+}
+
+func auth(conn io.ReadWriter) error {
+	header := make([]byte,2)
+	_,err:= io.ReadFull(conn,header)
+	if err!=nil {
+		return err
+	}
+	//igonre check version
+	methods := make([]byte,int(header[1]))
+	_,err = io.ReadFull(conn,methods)
+	if err!=nil {
+		return err
+	}
+	_,err = conn.Write([]byte{uint8(5), uint8(0)}) // 返回协议5，不需要认证
+	return err
+}
+
+
+func readAddr(r io.Reader) (*Addr, error) {
+	d := &Addr{}
+	addrType := []byte{0}
+	if _, err := r.Read(addrType); err != nil {
+		return nil, err
+	}
+	switch addrType[0] {
+	case IPV4ADDR:
+		addr := make([]byte, 4)
+		if _, err := io.ReadFull(r, addr); err != nil {
+			return nil, err
+		}
+		d.IP = net.IP(addr)
+	case IPV6ADDR:
+		addr := make([]byte, 16)
+		if _, err := io.ReadFull(r, addr); err != nil {
+			return nil, err
+		}
+		d.IP = net.IP(addr)
+
+	case DNADDR:
+		if _, err := r.Read(addrType); err != nil {
+			return nil, err
+		}
+		addrLen := int(addrType[0])
+		DN := make([]byte, addrLen)
+		if _, err := io.ReadFull(r, DN); err != nil {
+			return nil, err
+		}
+		d.Dn = string(DN)
+
+	default:
+		return nil, errors.New("unkown addr type")
+	}
+
+	port := []byte{0, 0}
+	if _, err := io.ReadFull(r, port); err != nil {
+		return nil, err
+	}
+	d.Port = (int(port[0]) << 8) | int(port[1])
+	return d, nil
+}
+
+
+func request(conn io.ReadWriter) (*Command, error)  {
+	header := []byte{0, 0, 0}
+	if _, err := io.ReadFull(conn, header); err != nil {
+		return nil, err
+	}
+	//igonre check version
+	dest, err := readAddr(conn)
+	if err != nil {
+		return nil, err
+	}
+	cmd := &Command{
+		Version:  uint8(5),
+		Command:  header[1],
+		DestAddr: dest,
+		reader:   conn,
+	}
+
+	return cmd, nil
+}
+
+func replyMsg(w io.Writer, resp uint8, addr *Addr) error {
+	var addrType uint8
+	var addrBody []byte
+	var addrPort uint16
+	switch {
+	case addr == nil:
+		addrType = IPV4ADDR
+		addrBody = []byte{0, 0, 0, 0}
+		addrPort = 0
+
+	case addr.Dn != "":
+		addrType = DNADDR
+		addrBody = append([]byte{byte(len(addr.Dn))}, addr.Dn...)
+		addrPort = uint16(addr.Port)
+
+	case addr.IP.To4() != nil:
+		addrType = IPV4ADDR
+		addrBody = []byte(addr.IP.To4())
+		addrPort = uint16(addr.Port)
+
+	case addr.IP.To16() != nil:
+		addrType = IPV6ADDR
+		addrBody = []byte(addr.IP.To16())
+		addrPort = uint16(addr.Port)
+
+	default:
+		return errors.New("format address error")
+	}
+	bodyLen := len(addrBody)
+	msg := make([]byte, 6+bodyLen)
+	msg[0] = uint8(5)
+	msg[1] = resp
+	msg[2] = 0 // RSV
+	msg[3] = addrType
+	copy(msg[4:], addrBody)
+	msg[4+bodyLen] = byte(addrPort >> 8)
+	msg[4+bodyLen+1] = byte(addrPort & 0xff)
+	_, err := w.Write(msg)
+	return err
+}
+
+func handleSocks5(conn io.ReadWriteCloser) error {
+	if err := auth(conn);err !=nil {
+		return err
+	}
+	cmd,err := request(conn)
+	if err !=nil {
+		return  err
+	}
+	fmt.Printf("%v",cmd.DestAddr)
+	if err := handleCmd( cmd, conn); err != nil {
+		return err
+	}
+	return nil
+}
+
+func handleCmd(cmd *Command, conn io.ReadWriteCloser) error {
+	dest := cmd.DestAddr
+	if dest.Dn != "" {
+		addr, err := net.ResolveIPAddr("ip", dest.Dn)
+		if err != nil {
+			if err := replyMsg(conn, HOSTUNREACHABLE, nil); err != nil {
+				return err
+			}
+			return err
+		}
+		dest.IP = addr.IP
+	}
+
+	cmd.RealDestAddr = cmd.DestAddr
+	switch cmd.Command {
+	case CONNECTCMD:
+		return handleConn(conn, cmd)
+	default:
+		if err := replyMsg(conn, COMMANDNOTSUPPORTED, nil); err != nil {
+			return err
+		}
+		return errors.New("Unsupported command")
+	}
+}
+
+func handleConn(conn io.ReadWriteCloser, req *Command) error {
+	target, err := net.Dial("tcp", req.RealDestAddr.Addr())
+	if err != nil {
+		msg := err.Error()
+		resp := HOSTUNREACHABLE
+		if strings.Contains(msg, "refused") {
+			resp = CONNECTIONREFUSED
+		} else if strings.Contains(msg, "network is unreachable") {
+			resp = NETWORKUNREACHABLE
+		}
+		if err := replyMsg(conn, resp, nil); err != nil {
+			return err
+		}
+		return errors.New(fmt.Sprintf("Connect to %v failed: %v", req.DestAddr, err))
+	}
+	defer target.Close()
+
+	local := target.LocalAddr().(*net.TCPAddr)
+	bind := Addr{IP: local.IP, Port: local.Port}
+	if err := replyMsg(conn, SUCCEEDED, &bind); err != nil {
+		return err
+	}
+	go io.Copy(target, req.reader)
+	io.Copy(conn, target)
+	return nil
+}
+func main()  {
+	l,err := net.Listen("tcp",":8090")
+	if err !=nil {
+		log.Fatal(err)
+	}
+	for {
+		conn, err := l.Accept()
+		if err != nil {
+			log.Fatal(err)
+		}
+		handle := func(conn net.Conn) {
+			handleSocks5(conn)
+		}
+		go handle(conn)
+	}
+}
+```
+
+```bash
+$ go run main.go
+&{ 180.101.49.12 443} ## 使用curl出现
+$ export ALL_PROXY=socks5://127.0.0.1:8090 # 设置终端代理
+$ curl https://www.baidu.com
+<!DOCTYPE html>
+...
+```
