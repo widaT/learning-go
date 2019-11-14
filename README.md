@@ -40,9 +40,9 @@
 ## go socket编程
 
 - [socket](./go-socket编程/socket.md)
-- [go tcp upd服务(未完)](./go-socket编程/go-tcp-upd服务.md)
+- [go tcp upd服务](./go-socket编程/go-tcp-upd服务.md)
 - [go-websocket(未完)](./go-socket编程/go-websocket.md)
-- [go-socks5实现(未完)](./go-socket编程//go-socks5实现.md)
+- [go-socks5实现(未完)](./go-socket编程/go-socks5实现.md)
 - [深入理解connection-multiplexing](./go-socket编程/深入理解connection-multiplexing.md)
 
 ## go微服务
