@@ -355,3 +355,10 @@ $ curl https://www.baidu.com
 <!DOCTYPE html>
 ...
 ```
+
+上面的例子中我们，使用了linux的终端代理，这边隐藏了一个细节就是，终端代理实践上有socks5 client，所以我们并没有自己拼client相关的二进制协议。
+linux的终端只支持http，https。像ssh协议这需要自己去实现client协议，有兴趣的同学可以自己去实现下，这不不再赘述。
+
+## 总结
+
+本小节介绍了socks5的协议，以及实现了socks代理server。socks5其实不仅仅支持tcp还有支持udp。总体来说是一个简洁但功能强大的协议。
