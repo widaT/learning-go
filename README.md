@@ -61,7 +61,7 @@
 
 ## go和c语言
 
-- [cgo简介（未完）]（./cgo/cgo简介.md）
+- [cgo简介（未完）](./cgo/cgo简介.md)
 
 
 ## go汇编
