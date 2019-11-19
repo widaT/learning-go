@@ -118,7 +118,7 @@ import“ C”
 // #include <png.h>
 import "C
 ```
-可以通过设置PKG_CONFIG环境变量来更改默认的pkg-config工具。
+
 
 在程序构建时：
 - 程序包中的所有CPPFLAGS和CFLAGS伪指令被串联在一起，并用于编译该软件包中的C文件。
@@ -137,6 +137,152 @@ import "C
 // #cgo LDFLAGS: -L/go/src/foo/libs -lfoo
 ```
 
+## 类型转换
+
+### 数组类型转换
+
+数值类型对应表
+|  c   | cgo  |
+|  ----  | ----  |
+| signed char  | C.char |
+| unsigned char  | C.uchar  |
+| unsigned short |C.short |
+| unsigned int  | C.int |
+| unsigned long  | C.long |
+|long long |C.longlong |
+|unsigned long long |C.ulonglong |
+|float |C.float|
+|double |C.double |
+|void*|unsafe.Pointer|
+
+
+### 结构体，联合体，枚举类型转换
+
+cgo使用`C.struct_xxx` 访问c语言中的结构体，例如c语言中结构体为`struct S ` cgo返回为`C.struct_S`。
+
+cgo使用`C.union_xxx` 访问c语言中的联合体，注意的是cgo没办法访问联合体内的字段，`C.union_xxx`会变成字节数组。
+
+cgo使用`C.enum_xxx`访问c语言枚举类型。
+
+
+```go
+package main
+/*
+struct S {
+    int i;
+    float type;yuy
+union U {
+    int i;
+    float f;
+};
+
+enum E {
+    A,
+    B,
+};
+
+*/
+import "C"
+import (
+	"encoding/binary"
+	"fmt"
+	"unsafe"
+)
+
+func main()  {
+	var a C.struct_S
+	a.i =10
+	a._type =10.0
+	fmt.Println(a.i)
+	fmt.Println(a._type)
+
+
+	var b C.union_U  //联合体转成了[4]byte
+
+	binary.LittleEndian.PutUint32(b[:],9) //写入i的值
+
+	fmt.Printf("%T\n", b) // [4]uint8
+	fmt.Println(*(*C.int)(unsafe.Pointer(&b)) )
+
+	var c C.enum_E = C.B
+	fmt.Println(c)
+}
+```
+
+```bash
+$ go run main.go
+10
+10
+[4]uint8
+9
+1
+```
+
+### 字符串和字节数组
+
+go string转 char * ,[]byte 转 void *(unsafe.Pointer)
+```go
+func C.CString(string) *C.char
+func C.CBytes([]byte) unsafe.Pointer
+```
+这几个转换都有额外的内存耗损，使用完记得`C.free`释放内存。
+
+
+char * 转go string，void *(unsafe.Pointer)转[]byte
+```go
+func C.GoString(*C.char) string
+func C.GoStringN(*C.char, C.int) string
+
+func C.GoBytes(unsafe.Pointer, C.int) []byte
+```
+
+
+## cgo中c函数返回值
+
+c语言是不支持多个返回值的，cgo调用c函数会有两个返回值（即使c函数原本返回void）。第二个返回值为
+`#include <errno.h>`中的errno变量对应的错误描述，errno是一个全局变量，用于返回最近一次调用错误结果。
+
+```go
+package main
+/*
+#cgo LDFLAGS:-lm
+#include <math.h>
+#include <errno.h>
+int div(int a, int b) {
+    if(b == 0) {
+        errno = EINVAL;
+        return 0;
+    }
+    return a/b;
+}
+void voidFunc() {}
+
+*/
+import "C"
+import "fmt"
+
+func main() {
+	_, err := C.sqrt(-1) //参数错误
+	fmt.Println(err)
+
+	n,err := C.sqrt(4) 
+	fmt.Println(n,err)
+
+	_,err = C.voidFunc() //函数返回void
+	fmt.Println(err)
+
+	d,err :=C.div(4,0) //除数不能为0
+	fmt.Println(d,err)
+}
+```
+
+```go
+$ go run main.go
+numerical argument out of domain
+2 <nil>
+<nil>
+0 invalid argument
+```
 
 ## 参考资料
 

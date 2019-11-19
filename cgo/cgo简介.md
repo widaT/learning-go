@@ -26,7 +26,7 @@ package main
 
 /*
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //C.free 依赖这个头文件
 
 void myprint(char* s) {
 	printf("%s\n", s);

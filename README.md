@@ -62,8 +62,8 @@
 ## go和c语言
 
 - [cgo简介](./cgo/cgo简介.md)
-- [cgo入门（未完）](./cgo/cgo入门.md)
-
+- [cgo入门](./cgo/cgo入门.md)
+- [cgo使用场景](./cgo/cgo使用场景.md)
 
 
 
