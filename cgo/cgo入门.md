@@ -285,6 +285,54 @@ numerical argument out of domain
 0 invalid argument
 ```
 
-## 参考资料
+## go导出函数给c使用
 
+就像在本章节开头介绍的那样，go函数也是可以导出给c使用的。我们来写一个demo，项目文件结构如下：
+
+```bash
+$ tree
+.
+├── a.c
+├── go.mod
+└── main.go
+```
+main.go内容
+```go
+package main
+
+/*
+int foo();
+ */
+import "C"
+import "fmt"
+
+//export add
+func add(a, b C.int) C.int {  //导出go函数
+	return a+b
+}
+func main()  {
+	fmt.Println(C.foo())
+}
+```
+a.c内容
+
+```c
+#include "_cgo_export.h"
+int foo() {
+   return add(1, 1); //使用go函数add
+}
+```
+
+```bash
+$ go build -o test
+$ ./test
+2
+```
+
+## 总结
+
+本小节介绍了cgo的入门基础知识，介绍了如何开启cgo，介绍cgo和c的类型映射关系，cgo的编译参数如何编写，cgo中c函数2个返回值,以及go函数导出给c使用。
+
+
+## 参考资料
 -   [cgo](https://golang.org/cmd/cgo/)
