@@ -142,8 +142,9 @@ import "C
 ### 数组类型转换
 
 数值类型对应表
+
 |  c   | cgo  |
-|  ----  | ----  |
+| ------------- |:-------------:|
 | signed char  | C.char |
 | unsigned char  | C.uchar  |
 | unsigned short |C.short |
