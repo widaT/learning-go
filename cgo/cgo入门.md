@@ -154,7 +154,7 @@ import "C
 |unsigned long long |C.ulonglong |
 |float |C.float|
 |double |C.double |
-|void*|unsafe.Pointer|
+
 
 
 ### 结构体，联合体，枚举类型转换
@@ -236,6 +236,16 @@ func C.GoStringN(*C.char, C.int) string
 
 func C.GoBytes(unsafe.Pointer, C.int) []byte
 ```
+
+
+需要注意的是c语言的string是以'\0'结尾的char数组表示，而go的string底层数据是
+```go
+type StringHeader struct {
+	Data uintptr
+	Len  int
+}
+```
+`StringHeader`中的`Data`指向的数据末尾是不带'\0'的。
 
 
 ## cgo中c函数返回值

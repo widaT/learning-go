@@ -64,7 +64,7 @@
 - [cgo简介](./cgo/cgo简介.md)
 - [cgo入门](./cgo/cgo入门.md)
 - [cgo使用场景](./cgo/cgo使用场景.md)
-
+- [指针和内存互访](./cgo/指针和内存互访.md)
 
 
 ## go汇编
