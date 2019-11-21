@@ -39,7 +39,7 @@
 
 ## go socket编程
 
-- [socket](./go-socket编程/socket.md)
+- [socket编程](./go-socket编程/socket.md)
 - [go tcp udp服务](./go-socket编程/go-tcp-udp服务.md)
 - [go-socks5实现](./go-socket编程/go-socks5实现.md)
 - [go-websocket](./go-socket编程/go-websocket.md)
@@ -69,7 +69,18 @@
 
 ## go汇编
 
-- [go汇编笔记](./go汇编/go汇编笔记.md)
+- [go汇编简介(未完)](./go汇编/go汇编简介.md)
+- [go汇编基础(未完)](./go汇编/go汇编基础.md)
+- [函数(未完)](./go汇编/函数.md)
+- [go汇编使用场景(未完)](./go汇编/go汇编使用场景.md)
+- [go汇编笔记(未完)](./go汇编/go汇编笔记.md)
+
+## go分布式程序
+
+- [分布式一致性协议(未完)](./go分布式程序/分布式一致性协议.md)
+- [分布式自增Id生成（timestamp oracle）(未完)](./go分布式程序/分布式自增Id生成.md)
+- [利用etcd lease选主(未完)](./go分布式程序/利用etcd_lease选主.md)
+- [分布式事务模型-Percolator(未完)](./go分布式程序/percolator.md)
 
 ## go实战
 
