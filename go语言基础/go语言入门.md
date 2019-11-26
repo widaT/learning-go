@@ -6,3 +6,4 @@
     - 进阶 《Go并发编程实战》
 - [《Go语言高级编程》](https://chai2010.gitbooks.io/advanced-go-programming-book/content)
 - [GO专家编程](https://rainbowmango.gitbook.io/go/)
+- [煎鱼的迷之博客](https://book.eddycjy.com/golang/tools/godebug-sched.html)
