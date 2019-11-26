@@ -98,13 +98,13 @@
 
 ## go调试
 
-- [go调试器](./go调试/go调试器.md)
-- [调试go程序（未完）](./go调试/调试go程序.md)
+- [go调试器-delve](./go调试/go调试器.md)
+- [GODEBUG追踪调度器（未完）](./go调试/GODEBUG追踪调度器.md)
+- [GODEBUG追踪gc（未完）](./go调试/GODEBUG追踪gc.md)
 
 ## go实战
 
 - [go错误处理](./go实战/go错误处理.md)
-
 - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
 - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)
 
