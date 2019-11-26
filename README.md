@@ -21,7 +21,16 @@
 - [并发和并行](./go并发编程/并发和并行.md)
 - [原子操作](./go并发编程/原子操作.md)
 - [goroutine同步](./go并发编程/goroutine同步.md)
+- [条件变量](./go并发编程/条件变量.md)
 - [使用channel做goroutine同步](./go并发编程/使用channel做goroutine同步.md)
+- [条件变量](./go并发编程/条件变量.md)
+- [sync once(未完)](./go并发编程/sync_once.md)
+- [并发安全map(未完)](./go并发编程/sync_map.md)
+- [sync pool(未完)](./go并发编程/sync_pool.md)
+- [同步拓展方案-semaphore(未完)](./go并发编程/semaphore.md)
+- [同步拓展方案-singleflight(未完)](./go并发编程/singleflight.md)
+- [同步拓展方案-errrgroup(未完)](./go并发编程/errrgroup.md)
+- [同步拓展方案-spinlock(未完)](./go并发编程/spinlock.md)
 
 ## go web服务
 
@@ -56,8 +65,12 @@
 
 ## go runtime
 
+- [go runtime 简介(未完)](./go-runtime/runtime.md)
 - [go map(未完)](./go-runtime/go-map.md)
 - [go channel](./go-runtime/go-channel.md)
+- [go调度(未完)](./go-runtime/schedule.md)
+- [go内存分配器(未完)](./go-runtime/内存分配器.md)
+- [go垃圾回收器(未完)](./go-runtime/gc.md)
 
 ## go和c语言
 
@@ -82,10 +95,16 @@
 - [利用etcd lease选主(未完)](./go分布式程序/利用etcd_lease选主.md)
 - [分布式事务模型-Percolator(未完)](./go分布式程序/percolator.md)
 
+
+## go调试
+
+- [go调试器](./go调试/go调试器.md)
+- [调试go程序（未完）](./go调试/调试go程序.md)
+
 ## go实战
 
 - [go错误处理](./go实战/go错误处理.md)
-- [go调试器](./go实战/go调试器.md)
+
 - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
 - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)
 

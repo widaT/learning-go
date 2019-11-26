@@ -1,10 +1,10 @@
 # goroutine同步
 
-## 锁（sync.Mutex）和读写锁（sync.RWMutex）
+## 互斥锁（sync.Mutex）和读写锁（sync.RWMutex）
 
-类似其他语言，golang也提供了锁和读写锁的的同步原语。
+类似其他语言，golang也提供了互斥锁和读写锁的的同步原语。
 
-我们先看下go中锁（sync.Mutex）的使用。
+我们先看下go中互斥锁（sync.Mutex）的使用。
 
 ```golang
 package main
