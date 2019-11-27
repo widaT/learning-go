@@ -8,38 +8,36 @@ golang是带GC（垃圾回收）的语言，如果高频率的生成对象，然
 
 ## 使用sync.Pool
 
-sync.Pool 有连个对外API
+sync.Pool 有两个对外API
 
 ```
     func (p *Pool) Get() interface{} 
     func (p *Pool) Put(x interface{})
 ```
-另外`sync.Pool`对象初始化的时候需要指定对象属性`New`是一个 `func() interface{}`方法类型，用来在没有可复用对象时重新生成对象。
+另外`sync.Pool`对象初始化的时候需要指定属性`New`是一个 `func() interface{}`函数类型，用来在没有可复用对象时重新生成对象。
 
-
-其实`sync.Pool`的使用非常频繁，不管事go标准库还是第三方库都非常多的使用。在标准库`fmt`就使用到`sync.Pool`。
-
-我们追踪下`fmt.Printf`的源码：
+其实`sync.Pool`的使用非常频繁，不管事go标准库还是第三方库都非常多的使用。
+在标准库`fmt`就使用到`sync.Pool`，我们追踪下`fmt.Printf`的源码：
 
 ```go
 func Printf(format string, a ...interface{}) (n int, err error) {
 	return Fprintf(os.Stdout, format, a...)
 }
 
-func Sprintf(format string, a ...interface{}) string {
+func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
 	p := newPrinter()
 	p.doPrintf(format, a)
-	s := string(p.buf)
-	p.free()
-	return s
+	n, err = w.Write(p.buf)
+	p.free()zongj
+	return
 }
 
 var ppFree = sync.Pool{
-	New: func() interface{} { return new(pp) },
+	New: func() interface{} { return new(pp) }, //指定生成对象函数
 }
 
 func newPrinter() *pp {
-	p := ppFree.Get().(*pp)
+	p := ppFree.Get().(*pp)    //从pool中获取可复用对象，如果没有对象池会重新生成一个，注意这边拿到对象后会reset对象
 	p.panicking = false
 	p.erroring = false
 	p.wrapErrs = false
@@ -55,6 +53,67 @@ func (p *pp) free() {
 	p.arg = nil
 	p.value = reflect.Value{}
 	p.wrappedErr = nil
-	ppFree.Put(p)
+	ppFree.Put(p)             //用完后重新放到pool中
 }
 ```
+
+从上面的案例中大概可以看出`sync.Pool`是如何使用的。接下来我们写一个demo程序，看下另外一个`sync.Pool`的高频使用场景
+
+
+```go
+package main
+
+import (
+	"io"
+	"log"
+	"net"
+	"sync"
+)
+
+func main() {
+	bufpool := sync.Pool{}
+	bufpool.New = func() interface{} {
+		return make([]byte, 32768)
+	}
+	Pipe := func(c1, c2 io.ReadWriteCloser) {
+		b := bufpool.Get().([]byte)
+		b2 := bufpool.Get().([]byte)
+		defer func() {
+			bufpool.Put(b)
+			bufpool.Put(b2)
+			c1.Close()
+			c2.Close()
+		}()
+
+		go io.CopyBuffer(c1, c2, b)
+		io.CopyBuffer(c2, c1, b2)
+	}
+	l,err := net.Listen("tcp",":9999")
+	if err !=nil {
+		log.Fatal(err)
+	}
+	for  {
+		conn,err := l.Accept()
+		if err !=nil {
+			log.Fatal(err)
+		}
+		client ,err:= net.Dial("tcp","127.0.0.1:80")
+		if err !=nil {
+			log.Fatal(err)
+		}
+		go Pipe(conn,client)
+	}
+}
+```
+这是个的代理程序，任何连到本机9999端口的tcp链接都会转发到本地的80端口。我们使用`io.CopyBuffer`实现数据双工互相拷贝。
+`io.CopyBuffer`会频繁使用到缓存`[]byte`对象，我们用`sync.Pool`重复使用`[]byte`.
+
+运行一下程序
+```bash
+$ go run main.go
+$ curl http://localhost:9999
+```
+
+## 总结
+
+本小节介绍了`sync.Pool`的使用方式。`sync.Pool`能减轻go GC的负担，同时减少内存的分配，是保障go程序内存分配平缓的重要手段。

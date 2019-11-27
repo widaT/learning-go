@@ -27,10 +27,9 @@
 - [sync once](./go并发编程/sync_once.md)
 - [并发安全map](./go并发编程/sync_map.md)
 - [sync pool](./go并发编程/sync_pool.md)
-- [同步拓展方案-semaphore(未完)](./go并发编程/semaphore.md)
-- [同步拓展方案-singleflight(未完)](./go并发编程/singleflight.md)
-- [同步拓展方案-errrgroup(未完)](./go并发编程/errrgroup.md)
-- [同步拓展方案-spinlock(未完)](./go并发编程/spinlock.md)
+- [同步拓展方案-semaphore](./go并发编程/semaphore.md)
+- [同步拓展方案-singleflight](./go并发编程/singleflight.md)
+- [同步拓展方案-errgroup](./go并发编程/errgroup.md)
 
 ## go web服务
 
