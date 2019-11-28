@@ -28,12 +28,12 @@ func main()  {
 ```
 
 ```bash
-# go run main.go
+$ go run main.go
 ```
 
 然后打开终端
 ```bash
-# top -p pid
+$ top -p pid
 ```
 ![1](../img/1.png)
 
@@ -41,7 +41,7 @@ func main()  {
 按理说golang的gc应该回收这个1g的内存，然后归还给系统才对，可是这样子的事情并没有发生。
 到底发生了什么？我们去追踪下gc日志。
 ```bash
-# GODEBUG=gctrace=1 go run main.go
+$ GODEBUG=gctrace=1 go run main.go
 ...
 500000
 gc 10 @16.335s 0%: 0.004+1.0+0.004 ms clock, 0.016+0/1.0/2.9+0.016 ms cpu, 1006->1006->0 MB, 1784 MB goal, 4 P (forced)
@@ -65,7 +65,7 @@ gc 10 @16.335s 0%: 0.004+1.0+0.004 ms clock, 0.016+0/1.0/2.9+0.016 ms cpu, 1006-
 - 0.004+1.0+0.004 ms clock: 0.004表示STW时间；1.0表示并发标记用的时间；0.004表示markTermination阶段的STW时间
 - 0.016+0/1.0/2.9+0.016 ms cpu: 0.016表示整个进程在mark阶段STW停顿时间;0/1.0/2.9有三块信息，0是mutator assists占用的时间，2.9是dedicated mark workers+fractional mark worker占用的时间，2.9+是idle mark workers占用的时间。0.016 ms表示整个进程在markTermination阶段STW停顿时间(0.050 * 8)。
 - 1006->1006->0 MB: GC开始、GC结束、存活的heap大小
-- 1784 MB goal:下次gc的目标值
+- 1784 MB goal:下一次触发GC的内存占用阈值
 - 4 P: 处理器数量
 - (forced): 可能没有，代表程序中runtime.GC() 被调用
 
@@ -109,7 +109,7 @@ madvdontneed：如果设置GODEBUG=madvdontneed=1，golang归还内存给操作�
 
 动手试一试
 ```bash
-# GODEBUG=madvdontneed=1 go run main.go
+$ GODEBUG=madvdontneed=1 go run main.go
 ```
 ![2](../img/2.png)
 这下RSS正常了。

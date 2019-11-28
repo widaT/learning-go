@@ -92,14 +92,14 @@
 - [分布式一致性协议(未完)](./go分布式程序/分布式一致性协议.md)
 - [分布式自增Id生成（timestamp oracle）(未完)](./go分布式程序/分布式自增Id生成.md)
 - [利用etcd lease选主(未完)](./go分布式程序/利用etcd_lease选主.md)
-- [分布式事务模型-Percolator(未完)](./go分socks5实现
+- [分布式事务模型-Percolator(未完)](./go分布式程序/percolator.md)
 
 
 ## go程序调试
 
 - [go调试器——delve](./go调试/go调试器.md)
 - [GODEBUG追踪调度器](./go调试/GODEBUG追踪调度器.md)
-- [GODEBUG追踪gc（未完）](./go调试/GODEBUG追踪gc.md)
+- [GODEBUG追踪gc](./go调试/GODEBUG追踪gc.md)
 
 ## go实战
 
