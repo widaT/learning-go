@@ -67,7 +67,7 @@
 - [go runtime 简介(未完)](./go-runtime/runtime.md)
 - [go map(未完)](./go-runtime/go-map.md)
 - [go channel](./go-runtime/go-channel.md)
-- [go调度起(未完)](./go-runtime/scheduler.md)
+- [go调度器(未完)](./go-runtime/scheduler.md)
 - [go内存分配器(未完)](./go-runtime/内存分配器.md)
 - [go垃圾回收器(未完)](./go-runtime/gc.md)
 
@@ -87,13 +87,13 @@
 - [go汇编使用场景(未完)](./go汇编/go汇编使用场景.md)
 - [go汇编笔记(未完)](./go汇编/go汇编笔记.md)
 
-## go分布式程序
+## go分布式系统
 
-- [分布式一致性协议(未完)](./go分布式程序/分布式一致性协议.md)
-- [分布式自增Id生成（timestamp oracle）(未完)](./go分布式程序/分布式自增Id生成.md)
-- [利用etcd lease选主(未完)](./go分布式程序/利用etcd_lease选主.md)
-- [分布式事务模型-Percolator(未完)](./go分布式程序/percolator.md)
-
+- [分布式系统简介(未完)](./go分布式系统/分布式系统.md)
+- [分布式一致性协议(未完)](./go分布式系统/分布式一致性协议.md)
+- [分布式自增Id生成（timestamp oracle）(未完)](./go分布式系统/分布式自增Id生成.md)
+- [利用etcd lease选主(未完)](./go分布式系统/利用etcd_lease选主.md)
+- [分布式事务模型-Percolator(未完)](./go分布式系统/percolator.md)
 
 ## go程序调试
 
