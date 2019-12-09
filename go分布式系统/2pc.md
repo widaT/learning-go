@@ -2,7 +2,7 @@
 
 ## 二阶段提交协议（Two-phase Commit，即2PC）
 
-。二阶段提交参与者有两种角色：协调者(coordinator)和参与者(participants)
+二阶段提交参与者有两种角色：协调者(coordinator)和参与者(participants)
 
 二阶段提交顾名思义有两个阶段：
 
@@ -29,4 +29,8 @@
 
 
 ## 三阶段提交协议（three-phase Commit，即3PC）
+
+三阶段提交协议（Three-Phase Commit， 3PC）最关键要解决的就是 coordinator和参与者同时挂掉导致数据不一致的问题，所以3PC在 2PC 中又添加一个阶段，这样三阶段提交就有：`CanCommit`、`PreCommit` 和`DoCommit`三个阶段。
+
+3PC虽然能解决部分2PC的问题，但是同样过多的交互会导致其他的问题，3PC在实际项目中很少使用。感兴趣的同学可以去了解下，这边不再赘述。
 
