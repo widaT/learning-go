@@ -5,7 +5,7 @@
 https证书对开发人员不是很友好，安装开发环境的证书都相对麻烦了点。这边介绍一个小工具[mkcert](https://github.com/FiloSottile/mkcert)。
 
 ### 安装 mkcert
-本文以ubuntu和debain系统为例：
+本文以Ubuntu和Debian系统为例：
 
 - 安装依赖 `sudo apt install libnss3-tools`
 - 下载[mkcert](https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64)
