@@ -88,7 +88,7 @@
 
     - [分布式系统简介](./go分布式系统/分布式系统.md)
     - [分布式一致性协议——2PC](./go分布式系统/2pc.md)
-    - [分布式一致性协议——Raft(未完)](./go分布式系统/raft.md)
+    - [分布式一致性协议——Raft](./go分布式系统/raft.md)
     - [分布式一致性协议——Gossip(未完)](./go分布式系统/gossip.md)
     - [分布式自增Id生成（timestamp oracle）(未完)](./go分布式系统/分布式自增Id生成.md)
     - [利用etcd lease选主(未完)](./go分布式系统/利用etcd_lease选主.md)
