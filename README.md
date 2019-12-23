@@ -91,7 +91,7 @@
     - [分布式一致性协议——Raft](./go分布式系统/raft.md)
     - [分布式一致性协议——Gossip](./go分布式系统/gossip.md)
     - [分布式全局时间戳](./go分布式系统/全局时间戳.md)
-    - [事务模型-Percolator(未完)](./go分布式系统/percolator.md)
+    - [Etcd介绍](./go分布式系统/etcd.md)
 
 - go程序调试
 
