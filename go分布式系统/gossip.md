@@ -47,7 +47,7 @@ push/pull：A仅将（key,version）推送给B，B将本地比A新的数据（Ke
 ## Gossip算法的缺点：
 
 - Gossip算法无法确定某个时刻所有状态机的状态是否一致。
-- Gossip算法由于要经常和自己的相关节点通讯，因此可能早大量冗余的网络流量，甚至可能造成流量风暴。
+- Gossip算法由于要经常和自己的相关节点通讯，因此可能造成大量冗余的网络流量，甚至可能造成流量风暴。
 
 
 ## 总结
@@ -56,4 +56,5 @@ Gossip算法从他的特性来说应该是一种非常妙的算法，在非强�
 在go生态在gossip的实现比较多，比较出门的有hashicorp实现的[memberlist](https://github.com/hashicorp/memberlist)。
 
 ## 参考资料
+
 - [flowgossip](http://www.cs.cornell.edu/home/rvr/papers/flowgossip.pdf)

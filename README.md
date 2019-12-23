@@ -90,9 +90,8 @@
     - [分布式一致性协议——2PC](./go分布式系统/2pc.md)
     - [分布式一致性协议——Raft](./go分布式系统/raft.md)
     - [分布式一致性协议——Gossip](./go分布式系统/gossip.md)
-    - [分布式自增Id生成（timestamp oracle）(未完)](./go分布式系统/分布式自增Id生成.md)
-    - [利用etcd lease选主(未完)](./go分布式系统/利用etcd_lease选主.md)
-    - [分布式事务模型-Percolator(未完)](./go分布式系统/percolator.md)
+    - [分布式全局时间戳](./go分布式系统/全局时间戳.md)
+    - [事务模型-Percolator(未完)](./go分布式系统/percolator.md)
 
 - go程序调试
 
