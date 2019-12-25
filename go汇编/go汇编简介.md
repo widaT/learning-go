@@ -1,8 +1,15 @@
 # go汇编简介
 
-汇编是最接近CPU的人类可以阅读语言，尽管现代编译器已经很强大了，但是在一些场景下还是得手写汇编才能榨干cpu的性能。go语言标准库大量使用汇编语言做了性能优化。go语言的汇编不同于AT&T和Inter汇编，go的汇编是plan9汇编。plan9汇编的资料很少。在[Go语言高级编程](https://chai2010.gitbooks.io/advanced-go-programming-book/content/ch3-asm/readme.html)有专门的一个章节来介绍go汇编。
+## 为什么要学习go汇编
+
+go 虽然已经刚过了10周年的生日，但是go的编译器编译的汇编指令优化程度不是很高，无法和c/c++生态相比。在一些高频使用的算法和函数，go原生有时候显得比较无力。go标准库里头特别是算法库和runtime都大量使用go汇编。
+我们在写向量计算的相关代码时，如果利用cpu的sse和avx的指令集会带来可观的性能提升。
+我们在排查问题或者了解go底层代码是如何运行的，那么go汇编回事一个利器。汇编代码面前一切了无秘密。
 
 
+## go汇编
+
+go汇编和不同于inter汇编和AT&T汇编，go汇编源于plan9汇编，plan9汇编的相关知识感兴趣的可以去了解下，这里不多做介绍。go汇编是go语言的一部分，只能和go语言源码文件一起编译使用，不像inter汇编和AT&T汇编可以单独编译运行。
 
 
 
@@ -14,6 +21,4 @@
 
 # 参考资料
 
-https://lrita.github.io/2017/12/12/golang-asm
-
-https://chai2010.gitbooks.io/advanced-go-programming-book/content/ch3-asm/readme.html
+- [golang-asm](https://lrita.github.io/2017/12/12/golang-asm)
