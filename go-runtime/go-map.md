@@ -1,6 +1,6 @@
 # go map
 
-map结构是一种高频使用的数据结构，go的map是采用`链表法`（解释在hash冲突的时候，落在相同hash结果的bucket采用链表连接）的hash table。
+map结构是一种高频使用的数据结构，go的map是采用`链表法`（解决hash冲突的时候，落在相同hash结果的bucket采用链表连接）的hash table。
 
 go map的源码的目录为go/src/runtime/map.go。本文基于go1.13的版本。map的底层数据结构其实是`hmap`的指针。
 ```go
