@@ -12,9 +12,10 @@ go的runtime负责：
 - 反射（reflection）的实现
 - pprof，trace，race的实现
 
+本小节将依次介绍
 
-
-## 参考资料
- 
-
-[深度长文：深入Go Runtime，你能做到浅出吗?](https://mp.weixin.qq.com/s/ivO-USpxiyrL-9BzgE8Vcg)
+- map底层实现
+- channel的底层实现
+- goroutine调度器
+- go 内存分配器
+- go 垃圾会收器

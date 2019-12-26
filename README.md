@@ -61,8 +61,8 @@
 
 - go runtime
 
-    - [go runtime 简介(未完)](./go-runtime/runtime.md)
-    - [go map(未完)](./go-runtime/go-map.md)
+    - [go runtime 简介](./go-runtime/runtime.md)
+    - [go map](./go-runtime/go-map.md)
     - [go channel](./go-runtime/go-channel.md)
     - [go调度器(未完)](./go-runtime/scheduler.md)
     - [go内存分配器(未完)](./go-runtime/内存分配器.md)
