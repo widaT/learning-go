@@ -34,3 +34,4 @@ go汇编和不同于inter汇编和AT&T汇编，go汇编源于plan9汇编，plan9
 # 参考资料
 
 - [golang-asm](https://lrita.github.io/2017/12/12/golang-asm)
+- [A Manual for the Plan 9 assembler](https://9p.io/sys/doc/asm.html)
