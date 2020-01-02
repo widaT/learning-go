@@ -64,7 +64,7 @@
     - [go runtime 简介](./go-runtime/runtime.md)
     - [go map](./go-runtime/go-map.md)
     - [go channel](./go-runtime/go-channel.md)
-    - [go调度器(未完)](./go-runtime/scheduler.md)
+    - [go调度器](./go-runtime/scheduler.md)
     - [go内存分配器(未完)](./go-runtime/内存分配器.md)
     - [go垃圾回收器(未完)](./go-runtime/gc.md)
 
@@ -82,7 +82,7 @@
     - [go汇编基础(未完)](./go汇编/go汇编基础.md)
     - [函数(未完)](./go汇编/函数.md)
     - [go汇编使用场景(未完)](./go汇编/go汇编使用场景.md)
-    - [go汇编笔记(未完)](./go汇编/go汇编笔记.md)
+    - [go汇编笔记](./go汇编/go汇编笔记.md)
 
 - go分布式系统
 
