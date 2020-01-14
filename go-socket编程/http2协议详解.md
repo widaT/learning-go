@@ -1,5 +1,8 @@
 # http2协议详解
 
+http2并不是http1的替代产物，应该说http2是http1的拓展，http2同header头压缩，网络连接复用（net connection multiplexing）
+
+http2没有改动 http 的应用语义。 http方法、状态代码、URI 和标头字段等核心概念一如往常。不过http2 修改了数据格式化（分帧）以及在客户端与服务器间传输的方式。
 
 
 ## 建立http2连接
@@ -50,7 +53,9 @@
 
 ## HTTP/2 Connection Preface
 
-在http2建立连接后，服务端和客服端会互相发送24个字节内容为`PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n` 的连接序言（Connection Preface），然后紧接着会是一个http2 frame 类型为SETTINGS（后面为讲解frame），这个帧可能为空。到了这边双方算是已经完成连接了，后续客户端和服务端之间可以马上交换数据帧。
+在http2建立连接后，服务端和客服端会互相发送24个字节内容为`PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n` 的连接序言（Connection Preface），然后紧接着会是一个`http2 frame` 类型为`SETTINGS（后面为讲解frame）`，这个帧可能为空。
+
+到了这边双方算是已经完成连接了，后续客户端和服务端之间可以马上交换数据帧。
 
 ## http2 Frame
 
