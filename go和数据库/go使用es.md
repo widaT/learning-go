@@ -1,6 +1,8 @@
 # go使用es
-elasticsearch有官方的golang驱动 [elastic](https://github.com/olivere/elastic),文档和demo都比较少，es的查询语法也相对复杂，很多查询方式去翻翻官方的test文件才能发现方式。注意不同elasticsearch版本对于不同的client版本，例如elasticsearch 5.5.3对应的client版本为`gopkg.in/olivere/elastic.v5`，如果这个对应关系错误，很可能程序会出错，这个在`https://github.com/olivere/elastic`的readme文档也有介绍。
-本文的demo主要基于 `elasticsearch 5.5.3`，client为`gopkg.in/olivere/elastic.v5`。
+
+elasticsearch有官方的golang驱动[go-elasticsearch](https://github.com/elastic/go-elasticsearch)这个项目比较新，
+另外一个常用的是 [elastic](https://github.com/olivere/elastic)，这两个驱动文档和demo都比较少。es的查询语法也相对复杂，很多查询方式去翻翻它们的test文件才能发现方式。本小节使用`elastic`做演示，注意不同elasticsearch版本对于不同的client版本，例如elasticsearch 5.5.3对应的client版本为`gopkg.in/olivere/elastic.v5`。如果这个对应关系错误，很可能程序会出错，这个在`https://github.com/olivere/elastic`的readme文档也有介绍。
+本小节的demo主要基于 `elasticsearch 5.5.3`，client为`gopkg.in/olivere/elastic.v5`。
 
 ## go链接es
 ```golang
