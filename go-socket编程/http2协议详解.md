@@ -53,13 +53,13 @@ Http2没有改动 http 的应用语义。 http方法、状态代码、URI 和标
 
 ## HTTP/2 Connection Preface
 
-在Http2建立连接后，服务端和客服端会互相发送24个字节内容为`PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n` 的连接序言（Connection Preface），然后紧接着会是一个`Http2 frame` 类型为`SETTINGS（后面为讲解frame）`，这个帧可能为空。
+在Http2建立连接后，服务端和客服端会互相发送24个字节内容为`PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n` 的连接序言（Connection Preface），然后紧接着会是一个类型为`SETTINGS`的`Http2 Frame`，这个帧内容可能为空。
 
 到了这边双方算是已经完成连接了，后续客户端和服务端之间可以马上交换数据帧。
 
 ## Http2 Frame
 
-Http2的所有数据交互是通过Http2 Frame实现的，Http2 frame是二级制实现的，相比于http1文本的实现，二进制在读取效率上有明显优势。
+Http2的所有数据交互是通过Http2 Frame实现的，Http2 Frame是二进制实现的，相比于http1文本的实现，二进制在读取效率上有明显优势。
 
 ![](../img/Http2-1.svg)
 
