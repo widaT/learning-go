@@ -99,6 +99,8 @@
     - [GODEBUG追踪调度器](./go调试/GODEBUG追踪调度器.md)
     - [GODEBUG追踪gc](./go调试/GODEBUG追踪gc.md)
 
+- go程序调优
+
 - go实战
 
     - [go错误处理](./go实战/go错误处理.md)
