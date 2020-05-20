@@ -137,6 +137,7 @@ Header字段说明：
 
 ## 参考资料
 
+- [compression](http://http2.github.io/http2-spec/compression.html)
 - [http2-spec](https://http2.github.io/http2-spec/#starting)
 - [rfc7301](https://tools.ietf.org/html/rfc7301)
 - [http2](https://developers.google.com/web/fundamentals/performance/http2)
