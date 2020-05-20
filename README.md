@@ -100,7 +100,7 @@
     - [GODEBUG追踪gc](./go调试/GODEBUG追踪gc.md)
 
 - go程序调优
-
+    - [火焰图](./profiling/火焰图.md)
 - go实战
 
     - [go错误处理](./go实战/go错误处理.md)
