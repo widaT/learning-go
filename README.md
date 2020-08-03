@@ -42,6 +42,13 @@
     - [go使用redis](./go和数据库/go使用redis.md)
     - [go使用es](./go和数据库/go使用es.md)
 
+- go内嵌kv数据库
+
+    - [为什么需要内嵌数据库](./go内嵌kv数据库/README.md)
+    - [boltdb](./go内嵌kv数据库/boltdb.md)
+    - [badger](./go内嵌kv数据库/badger.md)
+    - [rocksdb](./go内嵌kv数据库/rocksdb.md)
+
 - go socket编程
 
     - [socket编程](./go-socket编程/socket.md)
