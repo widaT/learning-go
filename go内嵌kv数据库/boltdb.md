@@ -1,6 +1,6 @@
 # [BoltDB](https://github.com/etcd-io/bbolt)
 
-我们现在说的bolt一般都会说是etcd维护的bolt版本,老的bolt作者已经不再维护。bolt提供轻量级的kv数据库，支持完整的ACID事务。
+我们现在说的bolt一般都会说是etcd维护的bolt版本,老的bolt作者已经不再维护。bolt提供轻量级的kv数据库，内部是一个B+树结构体,支持完整的ACID事务。
 bolt是基于内存映射（mmap）的数据库，通常情况使用的内存会比较大，bolt适合kv数量不是特别大的场景。
 
 # 创建数据库
@@ -50,7 +50,7 @@ err := db.Update(func(tx *bolt.Tx) error {
 
 ## Buckets(桶)
 
-Bolt在内部用Buckets来组织相关的kv键值对，在同一个Bucket里头key值是不允许重复的。
+Bolt在内部用Buckets来组织相关的kv键值对，在同一个Bucket里头key值是不允许重复的,bolt中一个文件代表一个database，那么bucket就相当于一个table。
 
 
 ### 操作Bucket
