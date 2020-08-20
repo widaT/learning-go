@@ -47,7 +47,7 @@
     - [为什么需要内嵌数据库](./go内嵌kv数据库/README.md)
     - [boltdb](./go内嵌kv数据库/boltdb.md)
     - [badger](./go内嵌kv数据库/badger.md)
-    - [rocksdb](./go内嵌kv数据库/rocksdb.md)
+    - [goleveldb](./go内嵌kv数据库/goleveldb.md)
 
 - go socket编程
 
