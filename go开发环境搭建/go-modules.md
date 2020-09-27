@@ -2,15 +2,15 @@
 
 ## go modules 介绍
 
-go modules是go 1.11中的一个实验性选择加入功能。目前随着go 1.12 的发布，越来越多的项目已经采用go modules方式作为项目的包依赖管理。
+go modules是go 1.11中的一个实验性选择加入功能。目前随着go 1.14 的发布，越来越多的项目已经采用go modules方式作为项目的包依赖管理。
 
 ### 设置 GO111MODULE
 
-GO111MODULE 有三个值 off, on和auto（golang 1.12默认值）。
+GO111MODULE 有三个值 off, on和auto，go.1.13以上的版本默认都是开启go modules的 。
 
 - off：go tool chain 不会支持go module功能，寻找依赖包的方式将会沿用旧版本那种通过vendor目录或者GOPATH/src模式来查找。
 - on：go tool chain 会使用go modules，而不会去GOPATH/src目录下查找,依赖包文件保持在$GOPATH/pkg下，允许同一个package多个版本并存，且多个项目可以共享缓存的module。
-- auto（go 1.12的默认值）：go tool chain将会根据当前目录来决定是否启用module功能。当前目录在$GOPATH/src之外且该目录包含go.mod文件或者当前文件在包含go.mod文件的目录下面则会开启 go modules。
+- auto：go tool chain将会根据当前目录来决定是否启用module功能。当前目录在$GOPATH/src之外且该目录包含go.mod文件或者当前文件在包含go.mod文件的目录下面则会开启 go modules。
 
 
 ### go mod 命令介绍
