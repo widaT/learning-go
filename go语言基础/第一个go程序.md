@@ -5,7 +5,7 @@ go环境已经搭建好了，接下来我们写一下go程序的`hello world`
 ```go
 package main
 import (
-    "fmt" //导入标准库 fmt
+    "fmt" //导入fmt package
 )
 
 func main() {
