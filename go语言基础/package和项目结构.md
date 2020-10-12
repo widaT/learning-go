@@ -23,8 +23,65 @@ go项目的源码文件有如下三种
 go的package是基于目录的，同一个目录下的go代码只能用相同的package。
 
 ## main package
+
 go中`main package`是go可执行程序必须包含的一个package。该package下的`main`方法是go语言程序执行入口。
 
 
-## 第三方包导入和可见性
+## go可见性规则
 
+golang中常量、变量、类型名称、函数名、结构字段名 以一个大写字母开头，这个对象就可以被外部包的代码所使用；标识符如果以小写字母开头，则对包外是不可见的，整个包的内部是可见。
+
+
+```go
+
+//a目录下
+package a
+
+const COST="aa" //对外可见
+
+var A :=0  //对外可见
+var a :=0  //对外不可见
+
+func F1() { //对外可见
+
+}
+
+func f1(){ //对外不可见
+
+}
+
+type Student struct{ //对外可见
+    Name string   //对外可见
+    age int       //对外不可见
+} 
+
+type student struct {//对外不可见
+
+}
+
+
+//main package
+
+package main
+
+import "a"
+
+func main(){
+
+   println(a.COST) //访问a package下的常量
+
+    a.A ==1 //访问a package下 A变量
+    a.a //编译报错
+    a.F1()
+    a.f1()//编译报错
+
+
+    var stu  a.Student   //访问 a package下的Student结构体
+
+    var stu1 a.student //student不可见 编译报错
+
+    stu.Name = "nam1" //ok
+    stu.age = 18 //不可见 编译报错
+}
+
+```

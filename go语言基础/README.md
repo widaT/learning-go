@@ -12,6 +12,7 @@
 - [流程控制](./流程控制.md)
 - [函数](./函数.md)
 - [结构体和方法](./结构体和方法.md)
+- [package和项目结构](./package和项目结构.md)
 - [goroutine](./goroutine.md)
 - [interface](./interface.md)
 - [反射](./反射.md)
