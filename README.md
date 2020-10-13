@@ -11,7 +11,22 @@
     - [go单元测试](./go开发环境搭建/go-test.md)
 
 - go语言基础
-    - [go语言入门](./go语言基础/go语言入门.md)
+    - [第一个go程序](./go语言基础/第一个go程序.md)
+    - [常量](./go语言基础/常量.md)
+    - [变量](./go语言基础/变量.md)
+    - [基本类型](./go语言基础/基本类型.md)
+    - [字符串](./go语言基础/string.md)
+    - [数组和切片](./go语言基础//数组和切片.md)
+    - [map](./go语言基础//map.md)
+    - [指针类型](./go语言基础/指针类型.md)
+    - [运算](./go语言基础/运算.md)
+    - [流程控制](./go语言基础//流程控制.md)
+    - [函数](./go语言基础/函数.md)
+    - [结构体和方法](./go语言基础/结构体和方法.md)
+    - [package和项目结构](./go语言基础/package和项目结构.md)
+    - [goroutine](./go语言基础/goroutine.md)
+    - [interface](./go语言基础/interface.md)
+    - [反射](./go语言基础/反射.md)
 
 - go并发编程
 
@@ -117,7 +132,3 @@
 
 - demo代码
     - [传送门](https://github.com/widaT/leaning-go-code/)
-
-## 知识图谱
-
-![知识图谱](./img/go_learningmap.png)
