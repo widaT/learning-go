@@ -24,7 +24,7 @@
     - [函数](./go语言基础/函数.md)
     - [结构体和方法](./go语言基础/结构体和方法.md)
     - [package和项目结构](./go语言基础/package和项目结构.md)
-    - [goroutine](./go语言基础/goroutine.md)
+    - [goroutine和channel](./go语言基础/goroutine和channel.md)
     - [interface](./go语言基础/interface.md)
     - [反射](./go语言基础/反射.md)
 

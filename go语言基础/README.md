@@ -13,6 +13,6 @@
 - [函数](./函数.md)
 - [结构体和方法](./结构体和方法.md)
 - [package和项目结构](./package和项目结构.md)
-- [goroutine](./goroutine.md)
+- [goroutine和channel](./goroutine和channel.md)
 - [interface](./interface.md)
 - [反射](./反射.md)
