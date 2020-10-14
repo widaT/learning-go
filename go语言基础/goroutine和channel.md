@@ -5,7 +5,7 @@
 golang原生支持并发，在golang中每一个并发单元叫`goroutine`。`goroutine`你可以理解为golang实现轻量级的用户态线程。go程序启动的时候
 其主函数就开始在一个单独的goroutine中运行，这个goroutine我们叫main goroutine。
 
-在golang总启动一个goroutine的成本很低，通常只需要在普通函数执行前加`go`关键字就可以。
+在golang中启动一个goroutine的成本很低，通常只需要在普通函数执行前加`go`关键字就可以。
 
 ```go
 func fn(){
