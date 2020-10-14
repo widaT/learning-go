@@ -11,6 +11,7 @@
     - [go单元测试](./go开发环境搭建/go-test.md)
 
 - go语言基础
+
     - [第一个go程序](./go语言基础/第一个go程序.md)
     - [常量](./go语言基础/常量.md)
     - [变量](./go语言基础/变量.md)
@@ -27,7 +28,9 @@
     - [goroutine和channel](./go语言基础/goroutine和channel.md)
     - [interface](./go语言基础/interface.md)
     - [反射](./go语言基础/反射.md)
-
+    - [错误处理](./go语言基础/错误处理.md)
+    - [panic和recover](./go语言基础/panic和recover.md)
+    
 - go并发编程
 
     - [并发和并行](./go并发编程/并发和并行.md)
@@ -124,8 +127,6 @@
 - go程序调优
     - [火焰图](./profiling/火焰图.md)
 - go实战
-
-    - [go错误处理](./go实战/go错误处理.md)
     - [go http2 开发](./go实战/go_http2开发.md)
     - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
     - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)

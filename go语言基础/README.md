@@ -16,3 +16,5 @@
 - [goroutine和channel](./goroutine和channel.md)
 - [interface](./interface.md)
 - [反射](./反射.md)
+- [错误处理](./错误处理.md)
+- [panic和recover](./panic和recover.md)
