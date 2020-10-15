@@ -1,4 +1,4 @@
-# package和go项目结构
+# package和可见性
 
 ## go源码文件
 

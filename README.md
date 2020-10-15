@@ -6,10 +6,8 @@
 - go开发环境搭建
     - [环境搭建](./go开发环境搭建/环境搭建.md)
     - [集成开发环境](./go开发环境搭建/集成开发工具.md)
-    - [go依赖管理](./go开发环境搭建/go-modules.md)
-    - [go cmd](./go开发环境搭建/go命令.md)
-    - [go单元测试](./go开发环境搭建/go-test.md)
 
+  
 - go语言基础
 
     - [第一个go程序](./go语言基础/第一个go程序.md)
@@ -24,12 +22,22 @@
     - [流程控制](./go语言基础//流程控制.md)
     - [函数](./go语言基础/函数.md)
     - [结构体和方法](./go语言基础/结构体和方法.md)
-    - [package和项目结构](./go语言基础/package和项目结构.md)
+    - [package和可见性](./go语言基础/package和可见性.md)
     - [goroutine和channel](./go语言基础/goroutine和channel.md)
     - [interface](./go语言基础/interface.md)
     - [反射](./go语言基础/反射.md)
     - [错误处理](./go语言基础/错误处理.md)
     - [panic和recover](./go语言基础/panic和recover.md)
+    
+- go标准库
+    
+    - [go标准库](./go标准库/go标准库概述.md)
+
+- go项目管理
+    
+    - [go依赖管理](./go项目管理/go-modules.md)
+    - [go单元测试](./go项目管理/go-test.md)
+    - [go cmd](./go项目管理/go命令.md)
     
 - go并发编程
 

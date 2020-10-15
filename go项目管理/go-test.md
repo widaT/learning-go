@@ -2,7 +2,7 @@
 
 go test是golang的轻量化单元测试工具，结合testing这个官方包，可以很方便为golang程序写单元测试和基准测试。
 
-在之前go build命令介绍的时候说过，go build 编译包时，会忽略以“_test.go”结尾的文件。这些别忽略的_test.go文件正是go test的一部分。
+在之前go build命令介绍的时候说过，go build 编译包时，会忽略以“_test.go”结尾的文件。这些被忽略的_test.go文件正是go test的一部分。
 
 在以_test.go为结尾的文件中，常见有两种类型的函数：
 
@@ -77,6 +77,7 @@ run 后面的参数是正则匹配 -run "TestCompare" 会同时执行 TestCompar
 
 
 ### 表驱动测试
+
 在实际编写测试代码时，通常把要测试的输入值和期望的结果写在一起组成一个数据表（table），表（table）中的每条记录代表是一个含有输入值和期望值。还是看官方bytes.Compare的测试例子：
 
 ```go
@@ -167,6 +168,7 @@ ok      github.com/wida/gocode/test  1.111s
 报告显示我们的测试程序跑了30000000次，每次平均耗时35.4纳秒。
 
 ### 使用 b.ResetTimer
+
 有些时候我们的基础测试函数逻辑有点复杂或者在准备测试数据，如下
 
 ```go
