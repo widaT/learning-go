@@ -10,13 +10,13 @@ go test是golang的轻量化单元测试工具，结合testing这个官方包，
 - 基准测试(benchmark)函数，以Benchmark为函数名前缀的函数，它们用于衡量一些函数的性能；基准测试函数中一般会多次调用被测试的函数，然后收集平均执行时间。
 
 
-无论是测试函数或者是基准测试函数都必须```import testing``` 
+无论是测试函数或者是基准测试函数都必须`import testing` 
 
 ## 测试函数
 
 测试函数的签名
 
-```
+```go
 func TestA(t *testing.T){
 
 }
@@ -24,7 +24,7 @@ func TestA(t *testing.T){
 例如我们看下go的官方包 bytes.Compare 函数的测试
 
 
-```
+```go
 package test
 
 import (
@@ -79,7 +79,7 @@ run 后面的参数是正则匹配 -run "TestCompare" 会同时执行 TestCompar
 ### 表驱动测试
 在实际编写测试代码时，通常把要测试的输入值和期望的结果写在一起组成一个数据表（table），表（table）中的每条记录代表是一个含有输入值和期望值。还是看官方bytes.Compare的测试例子：
 
-```
+```go
 var compareTests = []struct {
 	a, b []byte
 	i    int
@@ -136,7 +136,7 @@ ok      github.com/wida/gocode/test  0.004s
 
 基准测试函数的函数签名如下
 
-```
+```go
 func BenchmarkTestB(b *testing.B) {
   
 }
@@ -144,7 +144,7 @@ func BenchmarkTestB(b *testing.B) {
 
 我们还是一官方的bytes.Compare 为例写一个基准测试
 
-```
+```go
 func BenchmarkComare(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
@@ -169,7 +169,7 @@ ok      github.com/wida/gocode/test  1.111s
 ### 使用 b.ResetTimer
 有些时候我们的基础测试函数逻辑有点复杂或者在准备测试数据，如下
 
-```
+```go
 func BenchmarkComare(b *testing.B) {
     //准备数据
     ...
