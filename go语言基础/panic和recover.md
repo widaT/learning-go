@@ -38,14 +38,54 @@ func main() {
 	func() {
 		defer func() {
 			if err := recover(); err != nil { //recover 函数没有异常的是返回 nil
-				fmt.Printf("panic: %v", err)
+				fmt.Printf("panic: %v ", err)
 			}
 		}()
 		func() {
 			panic("panic") //函数执行出现异常
 		}()
 	}()
+
+	fmt.Println("here") 
 }
+```
+执行结果是
+
+```
+anic: panic
+here
 ```
 
 `panic`的产生后会终止当前函数运行，然后去检测当前函数的`defer`是否有`recover`，没有的话会一直往上层冒泡直至最顶层；如果中间某个函数的defer有`recover`则这个向上冒泡过程到这个函数就会终止。
+
+
+golang中`goroutine`没有父子关系，不能在一个`goroutine`中 recover另一个`goroutine`的 `panic`。
+
+```go
+func main() {
+	func() {
+		defer func() {
+			if err := recover(); err != nil { 
+				fmt.Printf("panic: %v ", err)
+			}
+		}()
+		go func() {
+			panic("panic")
+		}()
+	}()
+	time.Sleep(1e9) 
+	fmt.Println("here")
+}
+```
+执行结果是
+```
+panic: panic
+
+goroutine 6 [running]:
+main.main.func1.2()
+	/workspace/gocode/test/cmd/test.go:16 +0x39
+created by main.main.func1
+	/workspace/gocode/test/cmd/test.go:15 +0x57
+exit status 2
+```
+我们看到虽然recover 捕获了错误信息，但是程序还是退出了。
