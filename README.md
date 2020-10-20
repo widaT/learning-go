@@ -32,7 +32,18 @@
 - go标准库
     
     - [go标准库](./go标准库/go标准库概述.md)
-
+    - [strings包](./go标准库/string.md)
+    - [bytes包](./go标准库/bytes.md)
+    - [io操作](./go标准库/io.md)
+    - [系统操作](./go标准库/os.md)
+    - [time](./go标准库/time.md)
+    - [命令行参数](./go标准库/flag.md)
+    - [json序列化](./go标准库/json.md)
+    - [程序日志](./go标准库/log.md)
+    - [strconv](./go标准库/map.md)
+    - [排序](./go标准库/sort.md)
+    - [sync](./go标准库/sync.md)
+    
 - go项目管理
     
     - [go依赖管理](./go项目管理/go-modules.md)
