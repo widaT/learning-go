@@ -1,6 +1,6 @@
 # go 标准库
 
-- [strings包](./string.md)
+- [strings包](./strings.md)
 - [bytes包](./bytes.md)
 - [io操作](./io.md)
 - [系统操作](./os.md)
