@@ -1,6 +1,6 @@
 # os 包
 
-`os`包提供了与平台无关操作系统函数接口。`os`接口旨在在所有操作系统上保持统一。
+`os`包提供了与平台无关操作系统函数接口。
 
 
 ## 程序运行环境相关函数
@@ -37,7 +37,7 @@ os.Mkdir("aa", 0755)
 fmt.Println(os.MkdirAll("aa/bb/", 0755))
 ```
 
-### 文件读取
+### 文件读写
 
 ```go
 func OpenFile(name string, flag int, perm FileMode) (file *File, err error) //通用的打开文件方法
@@ -86,7 +86,7 @@ if err != nil {
 	log.Fatal(err)
 }
 fmt.Println(string(b[:n])) //aaaabbbb
-os.Remove("a.txt")
+os.Remove("a.txt")  //删除文件
 f.Close()
 ```
 
