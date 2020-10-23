@@ -40,9 +40,8 @@
     - [flag——命令行参数解析](./go标准库/flag.md)
     - [json序列化](./go标准库/json.md)
     - [log——程序日志](./go标准库/log.md)
-    - [strconv(未完)](./go标准库/map.md)
-    - [排序(未完)](./go标准库/sort.md)
-    - [sync(未完)](./go标准库/sync.md)
+    - [strconv——字符串和其他基本类型转换](./go标准库/strconv.md)
+    - [sort——排序](./go标准库/sort.md)
     
 - go项目管理
     

@@ -10,4 +10,3 @@
 - [程序日志](./log.md)
 - [strconv](./map.md)
 - [排序](./sort.md)
-- [sync](./sync.md)
