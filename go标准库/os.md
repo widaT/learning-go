@@ -32,6 +32,63 @@ func Mkdir(name string, perm FileMode) error //使用指定的权限和名称创
 func MkdirAll(path string, perm FileMode) error //MkdirAll使用指定的权限和名称创建一个目录，包括任何必要的上级目录.
 ```
 
+```go
+os.Mkdir("aa", 0755)
+fmt.Println(os.MkdirAll("aa/bb/", 0755))
+```
+
+### 文件读取
+
+```go
+func OpenFile(name string, flag int, perm FileMode) (file *File, err error) //通用的打开文件方法
+func Remove(name string) error //删除文件或者目录
+```
+
+golang中用`*File`代表文件句柄。`*File`定义了很多操作它的方法。
+
+```go
+func (f *File) Chdir() error
+func (f *File) Chmod(mode FileMode) error
+func (f *File) Chown(uid, gid int) error
+func (f *File) Close() error
+func (f *File) Fd() uintptr
+func (f *File) Name() string
+func (f *File) Read(b []byte) (n int, err error)
+func (f *File) ReadAt(b []byte, off int64) (n int, err error)
+func (f *File) ReadFrom(r io.Reader) (n int64, err error)
+func (f *File) Readdir(n int) ([]FileInfo, error)
+func (f *File) Readdirnames(n int) (names []string, err error)
+func (f *File) Seek(offset int64, whence int) (ret int64, err error)
+func (f *File) SetDeadline(t time.Time) error
+func (f *File) SetReadDeadline(t time.Time) error
+func (f *File) SetWriteDeadline(t time.Time) error
+func (f *File) Stat() (FileInfo, error)
+func (f *File) Sync() error
+func (f *File) SyscallConn() (syscall.RawConn, error)
+func (f *File) Truncate(size int64) error
+func (f *File) Write(b []byte) (n int, err error)
+func (f *File) WriteAt(b []byte, off int64) (n int, err error)
+func (f *File) WriteString(s string) (n int, err error)
+```
+
+```go
+f, err := os.OpenFile("a.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
+if err != nil {
+	log.Fatal(err)
+}
+f.Write([]byte("aaaa"))
+f.WriteString("bbbb")
+f.Close() //打开成功的文件句柄 不用的时候一定记得关闭
+ff, err := os.OpenFile("a.txt", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0755)
+b := make([]byte, 1024)
+n, err := ff.Read(b)
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println(string(b[:n])) //aaaabbbb
+os.Remove("a.txt")
+f.Close()
+```
 
 # 参考文档
 
