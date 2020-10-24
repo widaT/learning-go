@@ -35,7 +35,7 @@
     - [strings包](./go标准库/string.md)
     - [bytes包](./go标准库/bytes.md)
     - [fmt——格式化输入输出](./go标准库/fmt.md)
-    - [os——系统操作接口](./go标准库/os.md)
+    - [文件读写](./go标准库/文件读写.md)
     - [time——时间和日历](./go标准库/time.md)
     - [flag——命令行参数解析](./go标准库/flag.md)
     - [json序列化](./go标准库/json.md)

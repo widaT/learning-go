@@ -27,7 +27,7 @@ go build --gcflags="-S" main.go
  MOVQ    AX, (SP)     //压栈  make的第一个参数
  MOVQ    $1, 8(SP)    //压栈  make的第一个参数
  CALL    runtime.makechan(SB)  //实际调用 runtime.makechan函数
-````
+```
 
 那么`ch := make(chan int,1)` 其实是调用 runtime.makechan的方法，
 
