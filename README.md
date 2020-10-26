@@ -45,7 +45,8 @@
     
 - go项目管理
     
-    - [go依赖管理](./go项目管理/go-modules.md)
+    - [go项目管理](./go项目管理/go项目管理.md)
+    - [go包依赖管理](./go项目管理/go-modules.md)
     - [go单元测试](./go项目管理/go-test.md)
     - [go cmd](./go项目管理/go命令.md)
     
