@@ -70,7 +70,7 @@
     - [go web服务](./web服务/go-web服务.md)
     - [http参数获取和http-client](./web服务/http参数获取和http-client.md)
     - [http请求参数校验](./web服务/http请求参数校验.md)
-    - [gin框架](./web服务/gin框架.md)
+    - [web服务框架](./web服务/web服务框架.md)
 
 - go数据库编程
 
