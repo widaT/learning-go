@@ -106,7 +106,7 @@ cgo的编译链接参数通过在注释中使用 `#cgo`伪命令实现。`#cgo`�
 
 ```go
 // #cgo CFLAGS：-DPNG_DEBUG = 1 #宏定义及赋值
-// #cgo amd64 386 CFLAGS：-DX86 = 1  #这边包好了系统约束 （adm64或者386）
+// #cgo amd64 386 CFLAGS：-DX86 = 1  #这边包含了系统约束 （adm64或者386）
 // #cgo LDFLAGS：-lpng 
 // #include <png.h> 
 import“ C”
