@@ -190,3 +190,23 @@ err := db.View(func(txn *badger.Txn) error {
   return nil
 })
 ```
+
+
+### value文件清理
+
+由于`badger`的`key`和`value`是分开存储的，`key`存储在`LSM-TREE`中，而value则独立于`LSM-TREE`之外，`LSM-TREE`的压缩过程，不会涉及value的合并。另外badger的事务基于MVCC的所以value是存在很多个版本的。总的来说手动清理value文件是必须的。
+
+badger提供`db.RunValueLogGC`来清理value文件。
+通常我们需要单独启用一个goroutine来执行。
+例子如下：
+```go
+ticker := time.NewTicker(5 * time.Minute)
+defer ticker.Stop()
+for range ticker.C {
+again:
+    err := db.RunValueLogGC(0.7)
+    if err == nil {
+        goto again
+    }
+}
+```
