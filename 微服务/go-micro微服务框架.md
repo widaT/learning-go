@@ -1,7 +1,7 @@
 # go-micro微服务框架
 
 ## go-micro简介
-Go Micro是可插拔的微服务开发框架。micro的设计哲学是可插拔的架构理念，她提供可快速构建系统的组件，并且可以根据自身的需求剥离默认实现并自行定制。详细的介绍可参考官方中文文档[Go Micro](https://micro.mu/docs/cn/go-micro.html)
+Go Micro是可插拔的微服务开发框架。micro的设计哲学是可插拔的架构理念，她提供可快速构建系统的组件，并且可以根据自身的需求剥离默认实现并自行定制。详细的介绍可参考官方中文文档[Go Micro](https://micro.mu/),目前go micro这个项目最新版本为v3。
 
 ## 安装go-micro依赖
     
@@ -21,17 +21,22 @@ Go Micro是可插拔的微服务开发框架。micro的设计哲学是可插拔�
 
 ```protobuf
 syntax = "proto3";
-package com.hello;
+
+option go_package = "../proto";
+
 service Say {
 	rpc Hello(Request) returns (SayResponse) {}
 }
+
 message Request {
 	string name = 1;
 }
+
 message Pair {
     int32 key = 1;
     string values = 2;
 }
+
 message SayResponse {
     string msg = 1;
     // 数组
@@ -40,41 +45,46 @@ message SayResponse {
     map<string, Pair> header = 3;
     RespType type = 4;
 }
+
 enum RespType {
     NONE = 0;
     ASCEND = 1;
     DESCEND = 2;
 }
+
 ```
 
 我们写一个shell脚本来生成golang源码文件
 
 ```bash
 #!/bin/bash
-protoc --go_out=plugins=micro:. test.proto
+protoc --go_out=. --micro_out=. test.proto
 ```
 
 目录结构
 ```bash
 $ tree
 .
+├── cli.Dockerfile
 ├── cmd
-│   ├── cli
-│   │   └── main.go
-│   ├── service
-│   │   └── main.go
-│   └── web
-│       └── main.go
+│   ├── cli
+│   │   └── main.go
+│   ├── service
+│   │   └── main.go
+│   └── web
+│       └── main.go
 ├── docker-compose.yml
-├── Dockerfile
 ├── go.mod
 ├── go.sum
 ├── Makefile
 ├── proto
-│   ├── gen.sh
-│   ├── test.pb.go
-│   └── test.proto
-└── README.md
+│   ├── gen.sh
+│   ├── test.pb.go
+│   ├── test.pb.micro.go
+│   └── test.proto
+├── README.md
+├── service.Dockerfile
+└── web.Dockerfile
 ```
 ### 编写service
 注意go-micro这边使用了默认的mdns来做服务发现，mdns的相关原理可参考[Multicast_DNS](https://en.wikipedia.org/wiki/Multicast_DNS)
@@ -84,10 +94,11 @@ package main
 
 import (
 	"context"
-	"github.com/micro/go-micro"
 	"log"
 	hello "mircotest/proto"
 	"os"
+
+	"github.com/asim/go-micro/v3"
 )
 
 type Hello struct{}
@@ -115,6 +126,7 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
 ```
 
 ### 编写web
@@ -124,11 +136,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/web"
 	"log"
 	hello "mircotest/proto"
 	"net/http"
+
+	"github.com/asim/go-micro/v3/client"
+	"github.com/asim/go-micro/v3/web"
 )
 
 func main() {
@@ -144,7 +157,7 @@ func main() {
 			if len(name) == 0 {
 				name = "World"
 			}
-			cl := hello.NewSayClient("wida.micro.srv.greeter", client.DefaultClient)
+			cl := hello.NewSayService("wida.micro.srv.greeter", client.DefaultClient)
 			rsp, err := cl.Hello(context.Background(), &hello.Request{
 				Name: name,
 			})
@@ -157,6 +170,7 @@ func main() {
 		}
 		fmt.Fprint(w, `<html><body><h1>Enter Name<h1><form method=post><input name=name type=text /></form></body></html>`)
 	})
+
 	if err := service.Init(); err != nil {
 		log.Fatal(err)
 	}
@@ -174,9 +188,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/micro/go-micro"
-	"github.com/micro/go-plugins/wrapper/select/roundrobin"
 	hello "mircotest/proto"
+
+	roundrobin "github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v3"
+	"github.com/asim/go-micro/v3"
 )
 
 func main() {
@@ -185,7 +200,7 @@ func main() {
 		micro.WrapClient(wrapper),
 	)
 	service.Init()
-	cl := hello.NewSayClient("wida.micro.srv.greeter", service.Client())
+	cl := hello.NewSayService("wida.micro.srv.greeter", service.Client())
 	rsp, err := cl.Hello(context.Background(), &hello.Request{
 		Name: "John",
 	})
@@ -193,8 +208,9 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%#v \n", rsp)
+	fmt.Printf("%s \n", rsp.Msg)
 }
+
 ```
 
 ### 编写Makefile简化编译过程
@@ -218,21 +234,23 @@ service :
 
 web :
 	@echo "build web"
-    @mkdir -p build
 	$(GOBUILD) -a -installsuffix cgo -ldflags '-w' -o build/web cmd/web/*.go
 
 cli :
 	@echo "build cli"
-    @mkdir -p build
 	$(GOBUILD) -a -installsuffix cgo -ldflags '-w' -o build/cli cmd/cli/*.go
-
+	
+docker:
+	@echo "build docker images"
+	docker-compose up --build
+	
 .PHONY: clean
 clean:
 	@rm -rf build/
 
 .PHONY: proto
 proto:
-	protoc --go_out=plugins=micro:. proto/test.proto
+	protoc --go_out=. --micro_out=. test.proto
 ```    
 
 这边需要注意我们编译golang的时候使用了`CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-w' -o` 这样的编译参数是为了去掉编译后的golang可执行文件对cgo的依赖，我们的程序要放在`alpine:latest`容器中，如果依赖cgo则运行不起来。
@@ -248,27 +266,29 @@ GO111MODULE=on CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags '-w' -o bui
 $ tree 
 .
 ├── build
-│   ├── cli
-│   ├── service
-│   └── web
+│   ├── cli
+│   ├── service
+│   └── web
+├── cli.Dockerfile
 ├── cmd
-│   ├── cli
-│   │   └── main.go
-│   ├── service
-│   │   └── main.go
-│   └── web
-│       └── main.go
+│   ├── cli
+│   │   └── main.go
+│   ├── service
+│   │   └── main.go
+│   └── web
+│       └── main.go
 ├── docker-compose.yml
-├── Dockerfile
 ├── go.mod
 ├── go.sum
 ├── Makefile
 ├── proto
-│   ├── gen.sh
-│   ├── test.pb.go
-│   └── test.proto
-└── README.md
-
+│   ├── gen.sh
+│   ├── test.pb.go
+│   ├── test.pb.micro.go
+│   └── test.proto
+├── README.md
+├── service.Dockerfile
+└── web.Dockerfile
 ```
 
 ## 微服务运行环境
@@ -297,118 +317,83 @@ $ curl -d"name=wida" localhost:8009    #这边简化web请求采用curl，同样
 
 ### 容器化运行服务
 
-####  制作镜像
 
-编写Dockerfile
+## 编写Dockfile
 
+分别编写三个dockerfile
 ```
 FROM alpine:latest
 
 WORKDIR /
-COPY  cmd/service/service /
+COPY  build/cli /
 
-#EXPOSE 8009       # web的时候去掉注释
-CMD ["./service"]
-```
-
-#### 生成镜像
-
-``` bash
-$ docker build -t wida/micro-service:v1.0 .
-Sending build context to Docker daemon  68.66MB
-Step 1/4 : FROM alpine:latest
- ---> 4d90542f0623
-Step 2/4 : WORKDIR /
- ---> Using cache
- ---> 48b2993f945d
-Step 3/4 : COPY  build/service /
- ---> Using cache
- ---> b90abc27c4bc
-Step 4/4 : CMD ["./service"]
- ---> Using cache
- ---> b1dcd224c140
-Successfully built b1dcd224c140
-Successfully tagged wida/micro-service:v1.0
-$ docker images
-REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
-wida/micro-service          v1.0                 b1dcd224c140        9 seconds ago       28.3MB
-```
-
-使用同样的方式生成web
-
-```bash
-docker images wida/*
-REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
-wida/micro-service   v1.0                b1dcd224c140        5 minutes ago       28.3MB
-wida/micro-web       v1.0                697738bd1ff0        5 minutes ago       28.4MB
+CMD ["./cli"]
 ```
 
 #### 编写docker-composer.yml
 
 ```
 version: "3"
+
 services:
-  consul:
-    command: -server -bootstrap -rejoin
-    image: progrium/consul:latest
+  etcd:
+    command: --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379
+    image: appcelerator/etcd:latest
     ports:
-      - "8300:8300"
-      - "8400:8400"
-      - "8900:8500"
-      - "8600:53/udp"
+      - "2379:2379"
     networks:
       - overlay
   server:
-    command: ./service --registry=consul --registry_address=consul:8500 --register_interval=5 --register_ttl=10
+    command: ./service --registry=etcd --registry_address=etcd:2379 --register_interval=5 --register_ttl=10
+    build:
+      dockerfile: ./service.Dockerfile
+      context: .
     image: wida/micro-service:v1.0
     networks:
       - overlay
+    depends_on:
+      - etcd
     deploy:
       mode: replicated
       replicas: 2
   web:
-    command: ./web --registry=consul --registry_address=consul:8500 --register_interval=5 --register_ttl=10
+    command: ./web --registry=etcd --registry_address=etcd:2379 --register_interval=5 --register_ttl=10
     image: wida/micro-web:v1.0
+    build:
+      dockerfile: ./web.Dockerfile
+      context: .
     networks:
       - overlay
+    depends_on:
+      - etcd
     ports:
       - "8009:8009"
 networks:
   overlay:
 ```
 
-这个时候我们我们采用了`consul`做服务发现。`cunsul`相关文档请查看[官方文档](https://www.consul.io/docs/index.html)
+这个时候我们我们采用了`etcd`做服务发现。`etcd`相关文档请查看[官方文档](https://etcd.io/)
 
-#### docker swarm部署服务
+#### docker-compose 部署服务
 
 ```bash
-$ docker stack deploy -c docker-compose.yml go-micro
-Creating network go-micro_overlay
-Creating service go-micro_web
-Creating service go-micro_consul
-Creating service go-micro_service
-$ docker service ls # 查看下服务状态 主要看replicas
-ID                  NAME                MODE                REPLICAS            IMAGE                    PORTS
-i6glmed3o9hs        go-micro_consul     replicated          1/1                 progrium/consul:latest   *:8300->8300/tcp, *:8400->8400/tcp, *:8900->8500/tcp, *:8600->53/udp
-oljgulgk4dby        go-micro_service     replicated          2/2                 wida/micro-service:v1.0   
-qki1bb7wdog2        go-micro_web        replicated          1/1                 wida/micro-web:v1.0      *:8009->8009/tcp
+$ make docker
 $ curl -d "name=wida" http://127.0.0.1:8009 ## 看服务都完全部署完毕后执行
 <html><body><h1>Hello 111 wida ,Im 7247ec528ca4</h1></body></html>
-$ curl -d "name=wida" http://127.0.0.1:8009  
-<html><body><h1>Hello 111 wida ,Im 31c430aa0aaf</h1></body></html> # 注意这边的hostname 和上面那个请求不一样，说明负载均衡生效了
 ```
 
 ### 在Kuberbetes中运行
 coming soon
 
 
-
 ## 总结
 
-本小节简要的介绍了go-micro的使用，go-micro实践的生态也比较庞大，代码也写的很优雅是一个不错的代码研究学习对象。更多关于go-micro的情况可以看github源码和参考资料中的文档
+本小节简要的介绍了go-micro的使用，go-micro实践的生态也比较庞大，代码也写的很优雅是一个不错的代码研究学习对象。更多关于go-micro的情况可以看github源码和参考资料中的文档。
+
+本小节[代码](https://gitlab.ulucu.com/xcxia/learning-go-code/tree/master/mircotest)
 
 
 # 参考资料
 
-- [Micro中文文档](https://micro.mu/docs/cn/)
+- [Micro中文文档](https://micro.mu)
 - [Micro 中国站教程系列](https://github.com/micro-in-cn/tutorials)
