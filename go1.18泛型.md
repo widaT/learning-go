@@ -124,6 +124,32 @@ $ go run main.go
 [99 31 63]
 ```
 
+## 带泛型的`struct`
+
+接下来我们看一下带泛型的`struct`
+
+```go
+//定义的时候需要加约束
+type Student[T constraints.Unsigned] struct {
+	Age T
+}
+
+//后续struct方法编写的时候 约束就不能写了
+func (s *Student[T]) GetAge() T {
+	return s.Age
+}
+```
+
+我们初始化带泛型的结构图
+
+```go
+age := uint(3)
+s := &Student[uint]{Age: age}
+fmt.Println(s.GetAge()) //3
+s1 := &Student[uint16]{Age: uint16(age)}
+fmt.Println(s1.GetAge()) //3
+```
+
 ## 总结
 
 go的泛型目前还没有官方推荐的最佳实践，标准库的代码也基本没改成泛型。但总归走出支持泛型这一步，后续丰富标准库应该是后面版本的事情了。再看[go2](https://github.com/golang/go/blob/dev.go2go/src/cmd/go2go/testdata/go2path/src/)代码的时候发现一个有意思的东西--`orderedmap`。感兴趣的同学可以去看看。
