@@ -140,7 +140,7 @@ func (s *Student[T]) GetAge() T {
 }
 ```
 
-我们初始化带泛型的结构图
+我们初始化带泛型的结构体
 
 ```go
 age := uint(3)
