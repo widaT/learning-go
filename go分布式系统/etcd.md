@@ -188,7 +188,7 @@ ttl 10
 ```go
 	nextKeepAlive := time.Now().Add((time.Duration(karesp.TTL) * time.Second) / 3.0)
 ```
-自动续租（修改TTL），从而实现key一直有效。在服务宕机或者异常的时候没有执行续租，那么这个key将会在10后失效，如果其他client watch这个key的话就能监听的这个key被删除了。
+自动续租（修改TTL），从而实现key一直有效。在服务宕机或者异常的时候没有执行续租，那么这个key将会在10秒后失效，如果其他client watch这个key的话就能监听的这个key被删除了。
 
 ## 总结
 
