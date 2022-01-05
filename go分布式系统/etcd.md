@@ -5,7 +5,7 @@
 
 ## etcd的特点
 
-- 简单：提供定义明确的面向用户的API（有http和grcp实现，注意http和grpc分别用了两套存储，数据不同）
+- 简单：提供定义明确的面向用户的API（有http和grpc实现，注意http和grpc分别用了两套存储，数据不同）
 - 安全：支持client端证书的TLS
 - 快速：基准测试支持10,000次write/s
 - 可靠：使用raft协议保证数据一致性
@@ -14,7 +14,7 @@
 
 ## etcd使用
 
-etcd项目有两个go client，一个基于http restful对于源码目录里头的client，另外一个基于grcp对于源码目录的clientv3，需要注意是这两个api操作的数据是不一样的。client支持的功能较小，而且性能也比较有问题，在go生态里头都会用基于grpc的clientv3。
+etcd项目有两个go client，一个基于http restful对于源码目录里头的client，另外一个基于grpc对于源码目录的clientv3，需要注意是这两个api操作的数据是不一样的。client支持的功能较小，而且性能也比较有问题，在go生态里头都会用基于grpc的clientv3。
 
 
 ## 连接etcd
