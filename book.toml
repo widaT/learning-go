@@ -1,0 +1,6 @@
+[book]
+authors = ["wida"]
+language = "zh"
+multilingual = false
+src = "src"
+title = "Go一站式编程"
