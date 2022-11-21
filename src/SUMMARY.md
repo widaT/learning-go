@@ -143,7 +143,7 @@
     - [GODEBUG追踪调度器](./go调试/GODEBUG追踪调度器.md)
     - [GODEBUG追踪gc](./go调试/GODEBUG追踪gc.md)
 
-# go程序调优
+# Go程序调优
 ---      
 - [火焰图](./profiling/火焰图.md)
 
@@ -153,7 +153,10 @@
     - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
     - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)
 
-# demo代码
+# Demo代码
+---
 - [demo代码](./example_code.md)
 
-# 联系我 微信号：widaWX
+# 关于我
+---
+- [关于我](./about.md)
