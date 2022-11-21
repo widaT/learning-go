@@ -1,8 +1,8 @@
 # LEARNING-GO
 
-再线阅读[]
+[再线阅读](https://learninggo.netlify.app/)
 
-本书籍使用mdbook[https://rust-lang.github.io/mdBook/index.html]
+本书籍使用[mdbook](https://rust-lang.github.io/mdBook/index.html)
 
 # 启动
 `mdbook serve`
