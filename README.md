@@ -1,6 +1,6 @@
 # LEARNING-GO
 
-[再线阅读](https://learninggo.netlify.app/)
+[在线阅读](https://learninggo.netlify.app/)
 
 本书籍使用[mdbook](https://rust-lang.github.io/mdBook/index.html)
 
