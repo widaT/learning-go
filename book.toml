@@ -4,3 +4,21 @@ language = "zh"
 multilingual = false
 src = "src"
 title = "Go一站式编程"
+
+[output.html]
+additional-css = ["theme/style3.css"]
+#additional-js = ["assets/custom.js", "assets/bigPicture.js"]
+git-repository-url = "https://github.com/widaT/learning-go"
+edit-url-template = "https://github.com/widaT/learning-go/edit/master/{path}"
+
+[output.html.playground]
+editable = true
+copy-js = true
+# line-numbers = true
+
+[output.html.fold]
+enable = true
+level = 1
+
+[rust]
+edition = "2021"   #在线运行用2021版本的
