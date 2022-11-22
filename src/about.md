@@ -10,5 +10,5 @@
 
 ## 个人维护站点
 
-- [北极星导航](https://bjxdh.cc/)
-- [程序员导航](https://cxydh.bjxdh.cc/)
+- [北极星导航](https://bjxw.xyz/)
+- [程序员导航](https://cxy.bjxw.xyz/)
