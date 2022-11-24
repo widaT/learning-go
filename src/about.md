@@ -6,7 +6,8 @@
 - Github:  https://github.com/widaT
 - Gitee:  https://gitee.com/wida
 - mail:  wida59@gmail.com
-- 微信： widaWX(说明来意)
+- 微信： 
+ ![微信](https://raw.githubusercontent.com/widaT/learning-go/master/wechat.png)
 
 ## 个人维护站点
 
