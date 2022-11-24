@@ -13,4 +13,4 @@
 `mdbook build`
 
 ## 联系我 
-![微信](./wechat.jpg)
+![微信](./wechat.png)
