@@ -12,4 +12,5 @@
 # build
 `mdbook build`
 
-## 联系我 微信：widaWX
+## 联系我 
+![微信](./wechat.jpg)
