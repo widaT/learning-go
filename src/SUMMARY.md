@@ -1,7 +1,7 @@
 # LEARNING-GO
 
 # 前言
-
+- [关于本书籍](./about.md))
 - [为什么选择go](./绪论.md)
 
 # Go开发环境搭建
@@ -153,10 +153,9 @@
     - [go语言结构体优雅初始化](./go实战/go语言结构体优雅初始化.md)
     - [go程序物理内存占用高的问题](./go实战/go程序物理内存占用高的问题.md)
 
-# Demo代码
+# 附录
 ---
+- [go泛型](./go1.18%E6%B3%9B%E5%9E%8B.md)
+- [o泛型对传统orm的影响](./go/go泛型对传统orm的影响.md)
+- [go1.18workspace](./go1.18workspace.md)
 - [demo代码](./example_code.md)
-
-# 关于我
----
-- [关于我](./about.md)
