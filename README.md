@@ -13,4 +13,4 @@
 `mdbook build`
 
 ## 联系我 
-![微信](./wechat.png)
+![微信](https://learninggo.bjxw.xyz/img/wechat.png)
