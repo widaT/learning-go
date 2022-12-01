@@ -9,7 +9,7 @@
 
 ## Go语言学习群
 - 微信：如果过期可加我微信，拉你入群
-  ![微信群](https://raw.githubusercontent.com/widaT/learning-go/master/wechatgroup.png)
+  ![微信群](https://learninggo.bjxw.xyz/img/wechatgroup.png)
 - Discord：[![](https://badgen.net/discord/members/F9Nm9zwH)](https://discord.gg/F9Nm9zwH)
 
 
@@ -18,7 +18,7 @@
 - Gitee:  https://gitee.com/wida
 - mail:  wida59@gmail.com
 - 微信： 
- ![微信](https://raw.githubusercontent.com/widaT/learning-go/master/wechat.png)
+ ![微信](https://learninggo.bjxw.xyz/img/wechat.png)
 
 
 ## 友情链接
