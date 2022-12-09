@@ -137,7 +137,7 @@ var initAll = function () {
     script.async = true;
     script.crossOrigin = "anonymous";
     script.setAttribute("data-repo", "widaT/learning-go");
-    script.setAttribute("data-repo-id", "MTkzODY0NDE1");
+    script.setAttribute("data-repo-id", "MDEwOlJlcG9zaXRvcnkxOTM4NjQ0MTU=");
     script.setAttribute("data-category", "章节评论区");
     script.setAttribute("data-category-id", "DIC_kwDOCJKM9c4COQcP");
     script.setAttribute("data-mapping", "specific");
