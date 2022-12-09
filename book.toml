@@ -7,7 +7,7 @@ title = "Go一站式编程"
 
 [output.html]
 additional-css = ["theme/style3.css"]
-#additional-js = ["assets/custom.js", "assets/bigPicture.js"]
+additional-js = ["assets/custom.js"]
 git-repository-url = "https://github.com/widaT/learning-go"
 edit-url-template = "https://github.com/widaT/learning-go/edit/master/{path}"
 
