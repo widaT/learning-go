@@ -139,12 +139,12 @@ var initAll = function () {
     script.setAttribute("data-repo", "widaT/learning-go");
     script.setAttribute("data-repo-id", "MDEwOlJlcG9zaXRvcnkxOTM4NjQ0MTU=");
     script.setAttribute("data-category", "章节评论区");
-    script.setAttribute("data-category-id", "DIC_kwDOCJKM9c4COQcP");
+    script.setAttribute("data-category-id", "DIC_kwDOC44i384CS_OB");
     script.setAttribute("data-mapping", "specific");
     script.setAttribute("data-term", pagePath);
     script.setAttribute("data-reactions-enabled", "1");
     script.setAttribute("data-emit-metadata", "0");
-    script.setAttribute("data-input-position", "top");
+    script.setAttribute("data-input-position", "bottom");
     script.setAttribute("data-theme", theme);
     document.getElementById("giscus-container").appendChild(script);
 
