@@ -10,7 +10,7 @@
 ## Go语言学习群
 - 微信：如果过期可加我微信，拉你入群
   ![微信群](https://learninggo.bjxw.xyz/img/wechatgroup.png)
-- Discord：[![](https://badgen.net/discord/members/F9Nm9zwH)](https://discord.gg/F9Nm9zwH)
+- Discord：[![](https://badgen.net/discord/members/xy79m8kCT7)](https://discord.gg/xy79m8kCT7)
 
 
 ## 联系我
