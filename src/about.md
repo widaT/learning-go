@@ -25,3 +25,4 @@
 
 - [北极星导航--做最专业的导航站](https://bjxw.xyz/)
 - [程序员导航--做程序员自己的导航站](https://cxy.bjxw.xyz/)
+- [mdBook中文指南](https://mdbook.bjxw.xyz/)
