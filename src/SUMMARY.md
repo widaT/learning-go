@@ -116,7 +116,7 @@
 ---
 - [cgo简介](./cgo/cgo简介.md)
     - [cgo入门](./cgo/cgo入门.md)
-    - [cgo使用场景](./cgo/cgo使用场景.md)
+    - [cgo的使用场景](./cgo/cgo的使用场景.md)
     - [指针和内存互访](./cgo/指针和内存互访.md)
     - [动态链接和静态链接](./cgo/动态链接和静态链接.md)
 
@@ -155,7 +155,7 @@
 
 # 附录
 ---
-- [go泛型](./go1.18%E6%B3%9B%E5%9E%8B.md)
-- [o泛型对传统orm的影响](./go/go泛型对传统orm的影响.md)
+- [go泛型](./go1.18泛型.md)
+- [go泛型对传统orm的影响](./go泛型对传统orm的影响.md)
 - [go1.18workspace](./go1.18workspace.md)
 - [demo代码](./example_code.md)
