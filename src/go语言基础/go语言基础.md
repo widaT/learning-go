@@ -1,25 +1,4 @@
-# 第一个go程序
-
-go环境已经搭建好了，接下来我们写一下go程序的`hello world`
-
-```go
-package main
-import (
-    "fmt" //导入fmt package
-)
-
-func main() {
-    fmt.Println("hello world")
-}
-```
-
-使用 `go run` 临时编译执行go程序
-
-```bash
-$ go run main.go
-hello world
-```
-
+# Go语言基础
 
 ## go的25个语言关键字
 
@@ -51,7 +30,6 @@ continue   for           import   return      var
     make len cap new append copy close delete
     complex real imag
     panic recover
-
 
 
 ## go语言命名规范
