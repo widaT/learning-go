@@ -145,7 +145,9 @@
 
 # Go程序调优
 ---      
-- [火焰图](./profiling/火焰图.md)
+- [profiling](./profiling/profiling.md)
+    - [火焰图](./profiling/火焰图.md)
+    - [内存分析实战](./profiling/内存分析实战.md)
 
 # Go实战
 ---  
